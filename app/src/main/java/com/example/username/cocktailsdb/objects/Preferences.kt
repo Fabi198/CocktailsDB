@@ -31,4 +31,17 @@ object Preferences {
         return email != null && provider != null
     }
 
+    fun getFavoritesCocktailsIDs(sharedPrefs: SharedPreferences): Array<String?> {
+        return arrayOf(
+            sharedPrefs.getString("popDrink1", "11000"),
+            sharedPrefs.getString("popDrink2", "11001"),
+            sharedPrefs.getString("popDrink3", "11002"),
+            sharedPrefs.getString("popDrink4", "11003"),
+            sharedPrefs.getString("popDrink5", "11004"),
+            sharedPrefs.getString("popDrink6", "11005"),
+            sharedPrefs.getString("popDrink7", "11006"),
+            sharedPrefs.getString("popDrink8", "11007")
+        )
+    }
+
 }

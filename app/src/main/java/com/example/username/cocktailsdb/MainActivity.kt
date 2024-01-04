@@ -20,6 +20,7 @@ import com.example.username.cocktailsdb.entities.ArraysNames.arrayCategories
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayGlasses
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayKinds
 import com.example.username.cocktailsdb.fragments.CocktailFullViewFragment
+import com.example.username.cocktailsdb.objects.Preferences.getFavoritesCocktailsIDs
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
 import com.example.username.cocktailsdb.objects.Preferences.getToastTwoBackShowed
 import com.example.username.cocktailsdb.objects.Preferences.isSessionSaved
@@ -43,12 +44,16 @@ class MainActivity : AppCompatActivity() {
 
         setupDrawerNavigationBar()
         setupDrawerContent()
-        setupPopularCocktails()
+        setupFavoriteCocktails()
 
         binding.cvCloseSession.btnPreferences.setOnClickListener { showPreferences() }
     }
 
-    private fun setupPopularCocktails() {
+    private fun setupFavoriteCocktails() {
+        getFavoritesCocktailsIDs(sharedPrefs).forEach {
+            // Query a la api con el id para rellenar la imagen y el texto
+        }
+
         binding.btnPopDrink1.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag)) }
     }
 
