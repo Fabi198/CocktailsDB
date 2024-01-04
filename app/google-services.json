@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "228553851996",
+    "project_id": "cocktailsdb-b0d00",
+    "storage_bucket": "cocktailsdb-b0d00.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228553851996:android:c2673adadc74ff8790d299",
+        "android_client_info": {
+          "package_name": "com.example.username.cocktailsdb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "228553851996-k6gdt87stg5nqnd86k61l44e8qg30c7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.username.cocktailsdb",
+            "certificate_hash": "1f87769185ccc8abbcf2f644ba8b64ab83e95f96"
+          }
+        },
+        {
+          "client_id": "228553851996-9arsbjd5611a276tms9mt1q0di9ak8sl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWHgNjRr_0T8Rdaa00LpwmLDjMKUInfRM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "228553851996-9arsbjd5611a276tms9mt1q0di9ak8sl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

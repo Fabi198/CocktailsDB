@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:textSize="24sp"
+        android:text="Whiskey Amargo"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/tvName"
+        android:fontFamily="@font/montserrat_regular"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tvName"
+        android:layout_margin="20dp"
+        android:id="@+id/llCVs"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_weight="30"
+            app:strokeWidth="1dp"
+            android:id="@+id/cvAlcoholic"
+            android:layout_margin="4dp"
+            app:strokeColor="@color/black"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Alcoholic"
+                android:layout_margin="12dp"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:fontFamily="@font/montserrat_black"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_weight="30"
+            app:strokeWidth="1dp"
+            android:id="@+id/cvCategory"
+            android:layout_margin="4dp"
+            app:strokeColor="@color/black"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Alcoholic"
+                android:layout_margin="12dp"
+                android:singleLine="true"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_black"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_weight="30"
+            app:strokeWidth="1dp"
+            android:id="@+id/cvGlass"
+            android:layout_margin="4dp"
+            app:strokeColor="@color/black"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Alcoholic"
+                android:layout_margin="12dp"
+                android:singleLine="true"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_black"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="24dp"
+        android:id="@+id/popUpMenuDescriptionTranslations"
+        app:layout_constraintTop_toBottomOf="@id/llCVs"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/three_dots_svgrepo_com"
+        android:layout_height="24dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:text="Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten only the outer rim and sprinkle the salt on it. The salt should present to the lips of the imbiber and never mix into the cocktail. Shake the other ingredients with ice, then carefully pour into the glass."
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@id/popUpMenuDescriptionTranslations"
+        android:id="@+id/tvInstructions"
+        android:fontFamily="@font/montserrat_regular"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvInstructions"
+        app:layout_constraintStart_toStartOf="@id/tvInstructions"
+        android:text="(Traducido por Google)"
+        android:layout_marginTop="4dp"
+        android:textSize="11sp"
+        android:fontFamily="@font/montserrat_italic"
+        android:id="@+id/tvTranslatedByGoogle"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTranslatedByGoogle"
+        android:layout_margin="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/item_ingredient"
+        android:layout_height="wrap_content"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/drawer_list_item.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginStart="48dp"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:contentDescription="@string/todo"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/glass_pousse_cafe"
+            android:id="@+id/ivItem"
+            android:layout_height="30dp"/>
+
+        <TextView
+            android:id="@+id/listItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:fontFamily="@font/montserrat_regular"
+            android:layout_margin="12dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:background="?android:attr/activatedBackgroundIndicator"
+            tools:ignore="RtlSymmetry" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+
+

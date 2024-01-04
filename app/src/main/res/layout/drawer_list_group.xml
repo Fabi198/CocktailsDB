@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/drawer_list_group.xml -->
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listHeader"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
+    android:gravity="center_vertical"
+    android:textSize="16sp"
+    android:fontFamily="@font/montserrat_medium"
+    android:textStyle="bold"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    tools:ignore="RtlSymmetry" />

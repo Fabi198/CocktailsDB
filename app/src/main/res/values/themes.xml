@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.CocktailsDB" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/mainbackground</item>
+    </style>
+
+    <style name="Theme.CocktailsDB" parent="Base.Theme.CocktailsDB" />
+
+    <color name="mainbackground">#5C6B66</color>
+</resources>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_margin="12dp"
+        app:cardCornerRadius="10dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/similYellow"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="60dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="12dp"
+                android:id="@+id/ivIngredient"
+                android:src="@drawable/pop_drink_3"
+                android:layout_height="60dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:singleLine="true"
+                app:layout_constraintStart_toEndOf="@id/ivIngredient"
+                android:id="@+id/tvNameIngredient"
+                android:text="Vodka 1/2 oz"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:layout_marginStart="24dp"
+                app:layout_constraintTop_toTopOf="@id/ivIngredient"
+                app:layout_constraintBottom_toBottomOf="@id/ivIngredient"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tvTsp"
+                android:layout_marginEnd="12dp"
+                android:textSize="11sp"
+                android:id="@+id/tvOZtoML"
+                android:fontFamily="@font/montserrat_medium_italic"
+                android:text="1 oz ≈ 30 ml"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvOZtoML"
+                app:layout_constraintBottom_toTopOf="@id/tvTbsp"
+                android:layout_marginEnd="12dp"
+                android:id="@+id/tvTsp"
+                android:textSize="11sp"
+                android:fontFamily="@font/montserrat_medium_italic"
+                android:text="tsp = Cucharada de té"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTsp"
+                app:layout_constraintBottom_toTopOf="@id/tvSlice"
+                android:layout_marginEnd="12dp"
+                android:id="@+id/tvTbsp"
+                android:textSize="11sp"
+                android:fontFamily="@font/montserrat_medium_italic"
+                android:text="tbsp/tblsp = Cucharada"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTbsp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="12dp"
+                android:id="@+id/tvSlice"
+                android:textSize="11sp"
+                android:fontFamily="@font/montserrat_medium_italic"
+                android:text="slice = Rebanada"
+                android:layout_height="wrap_content"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

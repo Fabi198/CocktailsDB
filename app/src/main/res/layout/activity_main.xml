@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/dlMain"
+    android:background="@color/graySuperDark"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/background_main_activity"
+            android:scaleType="fitXY"
+            android:alpha="0.5"
+            android:id="@+id/ivBackground"
+            android:contentDescription="@string/todo"
+            android:layout_height="match_parent"/>
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:id="@+id/toolbarMain"
+            android:elevation="10dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_margin="4dp"
+                android:id="@+id/ivLogoMain"
+                android:src="@drawable/logo_main"
+                android:layout_height="50dp"
+                android:contentDescription="@string/todo" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="20dp"
+            android:id="@+id/cvSearch"
+            android:layout_below="@id/toolbarMain"
+            android:layout_marginTop="42dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginEnd="42dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/transparent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_weight="70"
+                    android:background="@null"
+                    android:hint="@string/buscar_un_cocktail"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray"
+                    android:singleLine="true"
+                    android:inputType="text"
+                    android:id="@+id/etSearch"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:importantForAutofill="no"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_height="48dp"
+                    tools:ignore="VisualLintTextFieldSize" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/todo"
+                    android:src="@color/gray"
+                    tools:ignore="ImageContrastCheck" />
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="14"
+                    android:background="@null"
+                    android:id="@+id/btnSearch"
+                    android:contentDescription="@string/boton_de_busqueda"
+                    android:src="@android:drawable/ic_menu_search"
+                    tools:ignore="ImageContrastCheck" />
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="20dp"
+            android:id="@+id/cvIngredientSearch"
+            android:layout_below="@id/cvSearch"
+            android:layout_marginStart="42dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="42dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/transparent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_weight="70"
+                    android:background="@null"
+                    android:hint="@string/buscar_un_ingrediente"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray"
+                    android:singleLine="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:inputType="text"
+                    android:id="@+id/etIngredientSearch"
+                    android:importantForAutofill="no"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_height="48dp"
+                    tools:ignore="VisualLintTextFieldSize" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/todo"
+                    android:src="@color/gray"
+                    tools:ignore="ImageContrastCheck" />
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="14"
+                    android:background="@null"
+                    android:id="@+id/btnIngredientSearch"
+                    android:contentDescription="@string/boton_de_busqueda"
+                    android:src="@android:drawable/ic_menu_search"
+                    tools:ignore="ImageContrastCheck" />
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="36dp"
+            android:fontFamily="@font/montserrat_extra_bold_italic"
+            android:text="@string/cocktails_favoritos"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_below="@id/cvIngredientSearch"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/tvPopDrinksTitle"
+            android:layout_height="wrap_content"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:id="@+id/tlPopCocktails"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_below="@id/tvPopDrinksTitle"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:id="@+id/btnPopDrink1"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pop_drink_1"
+                        app:civ_border_width="1dp"
+                        app:civ_circle_background_color="@color/white"
+                        app:civ_border_overlay="false"
+                        android:elevation="10dp"
+                        app:civ_border_color="@color/white"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/trago_popular_numero_1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="@string/mojito"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:layout_margin="4dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp"
+                    android:id="@+id/btnPopDrink2"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pop_drink_2"
+                        app:civ_border_width="1dp"
+                        app:civ_circle_background_color="@color/white"
+                        app:civ_border_overlay="false"
+                        android:elevation="10dp"
+                        app:civ_border_color="@color/white"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/trago_popular_numero_2" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="@string/old_fashioned"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_margin="4dp"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp"
+                    android:id="@+id/btnPopDrink3"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pop_drink_3"
+                        app:civ_border_width="1dp"
+                        app:civ_circle_background_color="@color/white"
+                        app:civ_border_overlay="false"
+                        android:elevation="10dp"
+                        app:civ_border_color="@color/white"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/trago_popular_numero_3" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="@string/long_island"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_margin="4dp"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp"
+                    android:id="@+id/btnPopDrink4"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pop_drink_4"
+                        app:civ_border_width="1dp"
+                        app:civ_circle_background_color="@color/white"
+                        app:civ_border_overlay="false"
+                        android:elevation="10dp"
+                        app:civ_border_color="@color/white"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/trago_popular_numero_4" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="@string/negroni"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:layout_margin="4dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp"
+                    android:id="@+id/btnPopDrink5"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pop_drink_5"
+                        app:civ_border_width="1dp"
+                        app:civ_circle_background_color="@color/white"
+                        app:civ_border_overlay="false"
+                        android:elevation="10dp"
+                        app:civ_border_color="@color/white"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/trago_popular_numero_5" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="@string/whiskey_amargo"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:layout_margin="4dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp"
+                    android:id="@+id/btnPopDrink6"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pop_drink_6"
+                        app:civ_border_width="1dp"
+                        app:civ_circle_background_color="@color/white"
+                        app:civ_border_overlay="false"
+                        android:elevation="10dp"
+                        app:civ_border_color="@color/white"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/trago_popular_numero_6" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="@string/martini_seco"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:layout_margin="4dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp"
+                    android:id="@+id/btnPopDrink7"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pop_drink_7"
+                        app:civ_border_width="1dp"
+                        app:civ_circle_background_color="@color/white"
+                        app:civ_border_overlay="false"
+                        android:elevation="10dp"
+                        app:civ_border_color="@color/white"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/trago_popular_numero_7" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="@string/daiquir"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:layout_margin="4dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp"
+                    android:id="@+id/btnPopDrink8"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pop_drink_8"
+                        app:civ_border_width="1dp"
+                        app:civ_circle_background_color="@color/white"
+                        app:civ_border_overlay="false"
+                        android:elevation="10dp"
+                        app:civ_border_color="@color/white"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/trago_popular_numero_8" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="@string/margarita"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:layout_margin="4dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </TableRow>
+
+        </TableLayout>
+
+        <FrameLayout
+            android:id="@+id/containerFragment"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:elevation="4dp"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_gravity="start"
+        android:id="@+id/nv_home"
+        style="@style/NavigationViewStyle"
+        app:itemTextAppearance="@style/NavigationViewTextAppearance"
+        app:headerLayout="@layout/nav_header"
+        android:layout_height="match_parent"
+        tools:ignore="VisualLintBounds" >
+
+        <!-- Ahora coloca el ExpandableListView -->
+        <ExpandableListView
+            android:id="@+id/expandableListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="120dp"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="60dp"
+            android:id="@+id/llPreferences"
+            android:visibility="gone"
+            android:clipChildren="false"
+            android:layout_marginBottom="120dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:fontFamily="@font/montserrat_bold"
+                android:id="@+id/btnShowLanguageOptions"
+                android:padding="16dp"
+                android:background="?android:attr/windowBackground"
+                android:elevation="10dp"
+                android:text="@string/idioma_de_instrucciones"
+                android:layout_height="wrap_content"
+                app:drawableEndCompat="@android:drawable/arrow_down_float" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:id="@+id/btnLanguageGroup"
+                android:visibility="gone"
+                android:layout_marginStart="24dp"
+                android:elevation="8dp"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:text="@string/ingl_s"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:id="@+id/btnEnglish"
+                    android:layout_height="wrap_content"/>
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:text="@string/espa_ol"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:id="@+id/btnSpanish"
+                    android:layout_height="wrap_content"/>
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:text="@string/alem_n"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:id="@+id/btnGerman"
+                    android:layout_height="wrap_content"/>
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:text="@string/franc_s"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:id="@+id/btnFrench"
+                    android:layout_height="wrap_content"/>
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:text="@string/italiano"
+                    android:id="@+id/btnItalian"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:layout_height="wrap_content"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+
+
+        <!-- Otros elementos del pie de página -->
+
+        <include
+            android:layout_gravity="bottom"
+            layout="@layout/nav_footer"
+            android:id="@+id/cvCloseSession"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"/>
+
+    </com.google.android.material.navigation.NavigationView>
+
+
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
