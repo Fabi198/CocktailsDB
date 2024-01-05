@@ -1,9 +1,16 @@
 package com.example.username.cocktailsdb.objects
 
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
 
 object Preferences {
 
+    fun saveGoogleUserData(sharedPrefs: SharedPreferences, email: String, providerName: String) {
+        val prefsEd = sharedPrefs.edit()
+        prefsEd.putString("email", email)
+        prefsEd.putString("provider", providerName)
+        prefsEd.apply()
+    }
 
     fun saveLanguagePreference(sharedPrefs: SharedPreferences, language: String) {
         val editor = sharedPrefs.edit()

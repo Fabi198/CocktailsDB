@@ -1,9 +1,11 @@
 package com.example.username.cocktailsdb
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -20,13 +22,22 @@ import com.example.username.cocktailsdb.entities.ArraysNames.arrayCategories
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayGlasses
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayKinds
 import com.example.username.cocktailsdb.fragments.CocktailFullViewFragment
+import com.example.username.cocktailsdb.objects.GoogleSignInManager
 import com.example.username.cocktailsdb.objects.Preferences.getFavoritesCocktailsIDs
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
 import com.example.username.cocktailsdb.objects.Preferences.getToastTwoBackShowed
 import com.example.username.cocktailsdb.objects.Preferences.isSessionSaved
+import com.example.username.cocktailsdb.objects.Preferences.saveGoogleUserData
 import com.example.username.cocktailsdb.objects.Preferences.saveLanguagePreference
 import com.example.username.cocktailsdb.objects.Preferences.setToastTwoBackShowed
+import com.example.username.cocktailsdb.objects.ProviderType
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
@@ -35,17 +46,23 @@ class MainActivity : AppCompatActivity() {
     private var lastClickTime: Long = 0
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPrefs: SharedPreferences
+    private var googleSignInManager: GoogleSignInManager? = null
+    private val provider = ProviderType()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         sharedPrefs = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE)
+        googleSignInManager = GoogleSignInManager.getInstance(this)
+        googleSignInManager?.setupGoogleSignInOptions()
 
         setupDrawerNavigationBar()
         setupDrawerContent()
         setupFavoriteCocktails()
 
+        binding.cvCloseSession.btnGoogle.setOnClickListener { googleSignInManager!!.signIn() }
+        binding.cvCloseSession.btnCloseSession.setOnClickListener { googleSignInManager!!.signOut() }
         binding.cvCloseSession.btnPreferences.setOnClickListener { showPreferences() }
     }
 
@@ -54,7 +71,14 @@ class MainActivity : AppCompatActivity() {
             // Query a la api con el id para rellenar la imagen y el texto
         }
 
-        binding.btnPopDrink1.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag)) }
+        binding.btnPopDrink1.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11000") }
+        binding.btnPopDrink2.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11001") }
+        binding.btnPopDrink3.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11002") }
+        binding.btnPopDrink4.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11003") }
+        binding.btnPopDrink5.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11004") }
+        binding.btnPopDrink6.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11005") }
+        binding.btnPopDrink7.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11006") }
+        binding.btnPopDrink8.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11007") }
     }
 
     private fun showPreferences() {
@@ -171,11 +195,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun signOut() {
-        FirebaseAuth.getInstance().signOut()
         val prefsEd = sharedPrefs.edit()
         prefsEd.clear()
         prefsEd.apply()
         startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == googleSignInManager!!.GOOGLE_SIGN_IN) {
+            googleSignInManager!!.handleSignInResult(data)
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -216,13 +247,13 @@ class MainActivity : AppCompatActivity() {
     private fun showFragment(fragment: Fragment, tag: String, typeAlcoholic: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, letter: String? = null) {
         val bundle = Bundle()
         bundle.putInt(getString(R.string.idcontainer_tag), binding.containerFragment.id)
-        if (typeAlcoholic != null) { bundle.putString("Alcoholic", typeAlcoholic) }
-        if (typeGlass != null) { bundle.putString("Glass", typeGlass) }
-        if (typeCategory != null) { bundle.putString("Category", typeCategory) }
-        if (idDrink != null) { bundle.putString("id", idDrink) }
-        if (idIngredient != null) { bundle.putInt("id", Integer.parseInt(idIngredient)) }
-        if (ingredientName != null) { bundle.putString("Ingredient", ingredientName) }
-        if (letter != null) { bundle.putString("letter", letter) }
+        if (typeAlcoholic != null) { bundle.putString(getString(R.string.kind_tag), typeAlcoholic) }
+        if (typeGlass != null) { bundle.putString(getString(R.string.glass_tag), typeGlass) }
+        if (typeCategory != null) { bundle.putString(getString(R.string.category_tag), typeCategory) }
+        if (idDrink != null) { bundle.putString(getString(R.string.iddrink_tag), idDrink) }
+        if (idIngredient != null) { bundle.putInt(getString(R.string.idingredient_tag), Integer.parseInt(idIngredient)) }
+        if (ingredientName != null) { bundle.putString(getString(R.string.ingredient_tag), ingredientName) }
+        if (letter != null) { bundle.putString(getString(R.string.letter_tag), letter) }
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(binding.containerFragment.id, fragment, tag).addToBackStack(tag).commit()
         allGone()

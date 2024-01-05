@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_margin="12dp"
         app:cardCornerRadius="10dp"
+        android:id="@+id/cvMain"
         app:strokeWidth="1dp"
         app:strokeColor="@color/similYellow"
         android:layout_height="wrap_content">

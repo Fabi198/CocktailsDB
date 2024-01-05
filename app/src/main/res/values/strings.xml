@@ -1,4 +1,5 @@
 <resources>
+    <string name="default_web_client_id" translatable="false">228553851996-9arsbjd5611a276tms9mt1q0di9ak8sl.apps.googleusercontent.com</string>
     <string name="app_name">CocktailsDB</string>
     <string name="todo">TODO</string>
     <string name="boton_de_busqueda">Boton de busqueda</string>
@@ -48,4 +49,13 @@
     <string name="italian">italian</string>
     <string name="presiona_2_veces_para_volver_al_inicio">Presiona 2 veces para volver al inicio</string>
     <string name="cocktails_favoritos">Cocktails Favoritos</string>
+    <string name="google_Api">AIzaSyDWHgNjRr_0T8Rdaa00LpwmLDjMKUInfRM</string>
+    <string name="iddrink_tag">idDrink</string>
+    <string name="traducido_por_google">(Traducido por Google)</string>
+    <string name="kind_tag">Kind</string>
+    <string name="glass_tag">Glass</string>
+    <string name="category_tag">Category</string>
+    <string name="idingredient_tag">idIngredient</string>
+    <string name="ingredient_tag">Ingredient</string>
+    <string name="letter_tag">letter</string>
 </resources>

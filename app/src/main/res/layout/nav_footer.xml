@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/clMainFooter"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/separator"
@@ -25,7 +25,7 @@
         android:layout_marginBottom="4dp"
         android:id="@+id/btnCloseSession"
         android:layout_marginStart="20dp"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:strokeColor="@color/black"
         app:strokeWidth="1dp"
         android:layout_marginEnd="20dp"
@@ -36,11 +36,11 @@
             android:gravity="center_vertical"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
+            android:layout_margin="10dp"
             android:fontFamily="@font/montserrat_regular"
             android:text="@string/cerrar_sesi_n"
-            android:drawablePadding="4dp"
-            app:drawableStartCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            android:drawablePadding="12dp"
+            app:drawableStartCompat="@drawable/outline_cancel_24" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -51,7 +51,7 @@
         app:layout_constraintBottom_toTopOf="@id/btnPreferences"
         android:layout_marginBottom="4dp"
         android:id="@+id/btnGoogle"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:layout_marginStart="20dp"
         app:strokeColor="@color/black"
         app:strokeWidth="1dp"
@@ -66,7 +66,7 @@
             android:layout_margin="12dp"
             android:fontFamily="@font/montserrat_regular"
             android:text="@string/acceder_con_google"
-            android:drawablePadding="4dp"
+            android:drawablePadding="12dp"
             app:drawableStartCompat="@drawable/googleg_standard_color_18" />
 
     </com.google.android.material.card.MaterialCardView>
@@ -92,7 +92,7 @@
             android:layout_margin="10dp"
             android:fontFamily="@font/montserrat_regular"
             android:text="@string/ajustes_rapidos"
-            android:drawablePadding="4dp"
+            android:drawablePadding="12dp"
             app:drawableStartCompat="@drawable/settings_icon"
             app:drawableTint="@color/similYellow" />
 

@@ -21,11 +21,11 @@ object ShowFragmentFromFragment {
     ) {
         val bundle = Bundle()
         bundle.putInt("idContainer", idContainer)
-        if (typeAlcoholic != null) { bundle.putString("Alcoholic", typeAlcoholic) }
+        if (typeAlcoholic != null) { bundle.putString("Kind", typeAlcoholic) }
         if (typeGlass != null) { bundle.putString("Glass", typeGlass) }
         if (typeCategory != null) { bundle.putString("Category", typeCategory) }
-        if (idDrink != null) { bundle.putString("id", idDrink) }
-        if (idIngredient != null) { bundle.putInt("id", Integer.parseInt(idIngredient)) }
+        if (idDrink != null) { bundle.putString("idDrink", idDrink) }
+        if (idIngredient != null) { bundle.putInt("idIngredient", Integer.parseInt(idIngredient)) }
         if (ingredientName != null) { bundle.putString("Ingredient", ingredientName) }
         if (letter != null) { bundle.putString("letter", letter) }
         fragment.arguments = bundle
