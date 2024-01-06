@@ -124,6 +124,7 @@ class MainActivity : AppCompatActivity() {
 
             saveLanguagePreference(sharedPrefs, newLanguageSelected)
             binding.dlMain.closeDrawers()
+            startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         }
 
 
@@ -214,8 +215,10 @@ class MainActivity : AppCompatActivity() {
         if (binding.llPreferences.visibility == View.VISIBLE) {
             binding.llPreferences.visibility = View.GONE
             binding.expandableListView.visibility = View.VISIBLE
+            Log.i("PortetBack", "1")
         } else if (binding.dlMain.isDrawerOpen(GravityCompat.START)) {
             binding.dlMain.closeDrawer(GravityCompat.START)
+            Log.i("PortetBack", "2")
         } else {
             if (supportFragmentManager.backStackEntryCount > 1) {
                 val currentTime = System.currentTimeMillis()
@@ -223,18 +226,24 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.popBackStack()
                     startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                    Log.i("PortetBack", "3")
                 } else {
                     lastClickTime = currentTime
                     if (!getToastTwoBackShowed(sharedPrefs)) {
                         Toast.makeText(this, getString(R.string.presiona_2_veces_para_volver_al_inicio), Toast.LENGTH_SHORT).show()
                         setToastTwoBackShowed(sharedPrefs, true)
+                        Log.i("PortetBack", "4")
                     }
                     supportFragmentManager.popBackStack()
+                    Log.i("PortetBack", "5")
                 }
             } else if (supportFragmentManager.backStackEntryCount == 1) {
+                supportFragmentManager.popBackStack()
                 allVisible()
+                Log.i("PortetBack", "6")
             } else {
                 super.onBackPressed()
+                Log.i("PortetBack", "7")
                 finish()
             }
         }

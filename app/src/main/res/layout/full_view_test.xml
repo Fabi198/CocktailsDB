@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_weight="30"
             app:strokeWidth="1dp"
-            android:id="@+id/cvAlcoholic"
+            android:id="@+id/cv_kind"
             android:layout_margin="4dp"
             app:strokeColor="@color/black"
             android:layout_height="wrap_content">

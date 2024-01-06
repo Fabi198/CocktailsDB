@@ -40,7 +40,8 @@
             android:fontFamily="@font/montserrat_regular"
             android:text="@string/cerrar_sesi_n"
             android:drawablePadding="12dp"
-            app:drawableStartCompat="@drawable/outline_cancel_24" />
+            app:drawableStartCompat="@drawable/outline_cancel_24"
+            app:drawableTint="@color/similYellow" />
 
     </com.google.android.material.card.MaterialCardView>
 
