@@ -1,14 +1,15 @@
 package com.example.username.cocktailsdb
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,28 +17,30 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.adapters.DrawerExpandableListAdapter
 import com.example.username.cocktailsdb.databinding.ActivityMainBinding
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayCategories
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayGlasses
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayKinds
 import com.example.username.cocktailsdb.fragments.CocktailFullViewFragment
+import com.example.username.cocktailsdb.fragments.CocktailsListedFragment
+import com.example.username.cocktailsdb.fragments.IngredientFullViewFragment
 import com.example.username.cocktailsdb.objects.GoogleSignInManager
+import com.example.username.cocktailsdb.objects.Preferences.getFavoriteCocktailID
 import com.example.username.cocktailsdb.objects.Preferences.getFavoritesCocktailsIDs
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
 import com.example.username.cocktailsdb.objects.Preferences.getToastTwoBackShowed
 import com.example.username.cocktailsdb.objects.Preferences.isSessionSaved
-import com.example.username.cocktailsdb.objects.Preferences.saveGoogleUserData
 import com.example.username.cocktailsdb.objects.Preferences.saveLanguagePreference
 import com.example.username.cocktailsdb.objects.Preferences.setToastTwoBackShowed
 import com.example.username.cocktailsdb.objects.ProviderType
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
+import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment
+import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
@@ -47,7 +50,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPrefs: SharedPreferences
     private var googleSignInManager: GoogleSignInManager? = null
-    private val provider = ProviderType()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,25 +62,122 @@ class MainActivity : AppCompatActivity() {
         setupDrawerNavigationBar()
         setupDrawerContent()
         setupFavoriteCocktails()
+        setupSearchers()
 
         binding.cvCloseSession.btnGoogle.setOnClickListener { googleSignInManager!!.signIn() }
         binding.cvCloseSession.btnCloseSession.setOnClickListener { googleSignInManager!!.signOut() }
         binding.cvCloseSession.btnPreferences.setOnClickListener { showPreferences() }
     }
 
+    private fun setupSearchers() {
+        binding.etSearch.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (binding.etSearch.text.toString().isNotEmpty()) {
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
+                    showFragment(CocktailsListedFragment(), "CocktailListedFragment", cocktailName = binding.etSearch.text.toString().replace(" ", ""))
+                    binding.etSearch.text = null
+                }
+                return@setOnKeyListener true }
+            false
+        }
+        binding.btnSearch.setOnClickListener {
+            if (binding.etSearch.text.toString().isNotEmpty()) {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
+                showFragment(CocktailsListedFragment(), "CocktailListedFragment", cocktailName = binding.etSearch.text.toString().replace(" ", ""))
+                binding.etSearch.text = null
+            }
+        }
+        binding.etIngredientSearch.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (binding.etIngredientSearch.text.toString().isNotEmpty()) {
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=${binding.etIngredientSearch.text}")
+                        val ingredientDTO = responseService.body()
+                        withContext(Dispatchers.Main) {
+                            if (ingredientDTO?.ingredient != null) {
+                                showFragment(IngredientFullViewFragment(), getString(R.string.ingredientfullviewfragment_tag), ingredientName = ingredientDTO.ingredient[0].strIngredient)
+                            } else {
+                                Toast.makeText(this@MainActivity, "No hay resultados", Toast.LENGTH_SHORT).show()
+                            }
+                            binding.etIngredientSearch.text = null
+                        }
+                    }
+
+                }
+                return@setOnKeyListener true }
+            false
+        }
+        binding.btnIngredientSearch.setOnClickListener {
+            if (binding.etIngredientSearch.text.toString().isNotEmpty()) {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=${binding.etIngredientSearch.text}")
+                    val ingredientDTO = responseService.body()
+                    withContext(Dispatchers.Main) {
+                        if (ingredientDTO != null) {
+                            showFragment(IngredientFullViewFragment(), getString(R.string.ingredientfullviewfragment_tag), ingredientName = ingredientDTO.ingredient[0].strIngredient)
+                        } else {
+                            Toast.makeText(this@MainActivity, "No hay resultados", Toast.LENGTH_SHORT).show()
+                        }
+                        binding.etIngredientSearch.text = null
+                    }
+                }
+
+            }
+        }
+    }
+
     private fun setupFavoriteCocktails() {
-        getFavoritesCocktailsIDs(sharedPrefs).forEach {
-            // Query a la api con el id para rellenar la imagen y el texto
+        getFavoritesCocktailsIDs(sharedPrefs).forEachIndexed { index, c ->
+            lifecycleScope.launch(Dispatchers.IO) {
+                val responseService =
+                    RetrofitCocktail.APICOCKTAILS.getCocktailsList("lookup.php?i=$c")
+                val cocktail = responseService.body()?.cocktails?.get(0)
+                withContext(Dispatchers.Main) {
+                    if (cocktail != null) {
+                        Glide.with(this@MainActivity)
+                            .load(cocktail.strDrinkThumb)
+                            .placeholder(R.drawable.placeholder_60_x_60)
+                            .into(when (index) {
+                                0 -> { binding.ivPopDrink1 }
+                                1 -> { binding.ivPopDrink2 }
+                                2 -> { binding.ivPopDrink3 }
+                                3 -> { binding.ivPopDrink4 }
+                                4 -> { binding.ivPopDrink5 }
+                                5 -> { binding.ivPopDrink6 }
+                                6 -> { binding.ivPopDrink7 }
+                                7 -> { binding.ivPopDrink8 }
+                                else -> { binding.ivPopDrink1 }
+                            })
+                        when (index) {
+                            0 -> { binding.tvPopDrink1.text = cocktail.strDrink }
+                            1 -> { binding.tvPopDrink2.text = cocktail.strDrink }
+                            2 -> { binding.tvPopDrink3.text = cocktail.strDrink }
+                            3 -> { binding.tvPopDrink4.text = cocktail.strDrink }
+                            4 -> { binding.tvPopDrink5.text = cocktail.strDrink }
+                            5 -> { binding.tvPopDrink6.text = cocktail.strDrink }
+                            6 -> { binding.tvPopDrink7.text = cocktail.strDrink }
+                            7 -> { binding.tvPopDrink8.text = cocktail.strDrink }
+                            else -> { binding.tvPopDrink1.text = cocktail.strDrink }
+                        }
+                    }
+                }
+            }
         }
 
-        binding.btnPopDrink1.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11000") }
-        binding.btnPopDrink2.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11001") }
-        binding.btnPopDrink3.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11002") }
-        binding.btnPopDrink4.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11003") }
-        binding.btnPopDrink5.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11004") }
-        binding.btnPopDrink6.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11005") }
-        binding.btnPopDrink7.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11006") }
-        binding.btnPopDrink8.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = "11007") }
+        binding.btnPopDrink1.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = getFavoriteCocktailID(sharedPrefs, 0)) }
+        binding.btnPopDrink2.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = getFavoriteCocktailID(sharedPrefs, 1)) }
+        binding.btnPopDrink3.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = getFavoriteCocktailID(sharedPrefs, 2)) }
+        binding.btnPopDrink4.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = getFavoriteCocktailID(sharedPrefs, 3)) }
+        binding.btnPopDrink5.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = getFavoriteCocktailID(sharedPrefs, 4)) }
+        binding.btnPopDrink6.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = getFavoriteCocktailID(sharedPrefs, 5)) }
+        binding.btnPopDrink7.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = getFavoriteCocktailID(sharedPrefs, 6)) }
+        binding.btnPopDrink8.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), idDrink = getFavoriteCocktailID(sharedPrefs, 7)) }
     }
 
     private fun showPreferences() {
@@ -169,13 +268,13 @@ class MainActivity : AppCompatActivity() {
 
             when (childData.second) {
                 in arrayGlasses -> {
-
+                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeGlass = childData.second.replace(" ", "_"))
                 }
                 in arrayCategories -> {
-
+                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeCategory = childData.second.replace(" ", "_"))
                 }
                 in arrayKinds -> {
-
+                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeKind = childData.second.replace(" ", "_"))
                 }
             }
             for (i in 0 until expandableListAdapter.groupCount) {
@@ -253,16 +352,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showFragment(fragment: Fragment, tag: String, typeAlcoholic: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, letter: String? = null) {
+    private fun showFragment(fragment: Fragment, tag: String, typeKind: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, cocktailName: String? = null) {
         val bundle = Bundle()
         bundle.putInt(getString(R.string.idcontainer_tag), binding.containerFragment.id)
-        if (typeAlcoholic != null) { bundle.putString(getString(R.string.kind_tag), typeAlcoholic) }
+        if (typeKind != null) { bundle.putString(getString(R.string.kind_tag), typeKind) }
         if (typeGlass != null) { bundle.putString(getString(R.string.glass_tag), typeGlass) }
         if (typeCategory != null) { bundle.putString(getString(R.string.category_tag), typeCategory) }
         if (idDrink != null) { bundle.putString(getString(R.string.iddrink_tag), idDrink) }
         if (idIngredient != null) { bundle.putInt(getString(R.string.idingredient_tag), Integer.parseInt(idIngredient)) }
         if (ingredientName != null) { bundle.putString(getString(R.string.ingredient_tag), ingredientName) }
-        if (letter != null) { bundle.putString(getString(R.string.letter_tag), letter) }
+        if (cocktailName != null) { bundle.putString(getString(R.string.cocktailname_tag), cocktailName) }
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(binding.containerFragment.id, fragment, tag).addToBackStack(tag).commit()
         allGone()

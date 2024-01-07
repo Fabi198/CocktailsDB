@@ -11,23 +11,23 @@ object ShowFragmentFromFragment {
         activity: FragmentActivity,
         fragment: Fragment,
         tag: String,
-        typeAlcoholic: String? = null,
+        typeKind: String? = null,
         typeGlass: String? = null,
         typeCategory: String? = null,
         idDrink: String? = null,
         idIngredient: String? = null,
         ingredientName: String? = null,
-        letter: String? = null
+        cocktailName: String? = null
     ) {
         val bundle = Bundle()
         bundle.putInt("idContainer", idContainer)
-        if (typeAlcoholic != null) { bundle.putString("Kind", typeAlcoholic) }
+        if (typeKind != null) { bundle.putString("Kind", typeKind) }
         if (typeGlass != null) { bundle.putString("Glass", typeGlass) }
         if (typeCategory != null) { bundle.putString("Category", typeCategory) }
         if (idDrink != null) { bundle.putString("idDrink", idDrink) }
         if (idIngredient != null) { bundle.putInt("idIngredient", Integer.parseInt(idIngredient)) }
         if (ingredientName != null) { bundle.putString("Ingredient", ingredientName) }
-        if (letter != null) { bundle.putString("letter", letter) }
+        if (cocktailName != null) { bundle.putString("cocktailName", cocktailName) }
         fragment.arguments = bundle
         activity.supportFragmentManager
             .beginTransaction()

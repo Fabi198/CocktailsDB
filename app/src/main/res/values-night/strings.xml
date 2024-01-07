@@ -58,4 +58,9 @@
     <string name="idingredient_tag">idIngredient</string>
     <string name="ingredient_tag">Ingredient</string>
     <string name="letter_tag">letter</string>
+    <string name="ingredientfullviewfragment_tag">IngredientFullViewFragment</string>
+    <string name="se_utiliza_en">Se utiliza en:</string>
+    <string name="cocktailname_tag">cocktailName</string>
+    <string name="no_hay_resultados">No hay resultados</string>
+    <string name="cocktailslistedfragment_tag">CocktailsListedFragment</string>
 </resources>

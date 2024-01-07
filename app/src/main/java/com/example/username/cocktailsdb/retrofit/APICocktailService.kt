@@ -2,7 +2,8 @@ package com.example.username.cocktailsdb.retrofit
 
 
 import com.example.username.cocktailsdb.entities.CategoriesDTO
-import com.example.username.cocktailsdb.entities.DrinksDTO
+import com.example.username.cocktailsdb.entities.CocktailsDTO
+import com.example.username.cocktailsdb.entities.CocktailsSimpleDTO
 import com.example.username.cocktailsdb.entities.GlassesDTO
 import com.example.username.cocktailsdb.entities.IngredientsDTO
 import retrofit2.Response
@@ -12,7 +13,10 @@ import retrofit2.http.Url
 interface APICocktailService {
 
     @GET
-    suspend fun getPopularDrinks(@Url url: String): Response<DrinksDTO>
+    suspend fun getCocktailsList(@Url url: String): Response<CocktailsDTO>
+
+    @GET
+    suspend fun getCocktailsSimpleList(@Url url: String): Response<CocktailsSimpleDTO>
 
     @GET
     suspend fun getIngredient(@Url url: String): Response<IngredientsDTO>

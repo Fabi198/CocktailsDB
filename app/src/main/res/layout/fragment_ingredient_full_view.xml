@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.IngredientFullViewFragment">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/similYellow"
+        android:id="@+id/pbIngredient"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/rlMain"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="60dp"
+            android:textSize="24sp"
+            android:textAlignment="center"
+            android:fontFamily="@font/montserrat_extra_bold_italic"
+            android:id="@+id/tvTitleIngredient"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_below="@id/tvTitleIngredient"
+            android:layout_above="@id/tvItsUsedOn"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="50"
+                android:layout_height="match_parent">
+
+                <ProgressBar
+                    android:layout_width="24dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/similYellow"
+                    android:id="@+id/pbIvIngredient"
+                    android:layout_height="24dp"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:scaleType="fitCenter"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/imagen_ilustrativa_del_ingrediente"
+                    android:id="@+id/ivIngredient"
+                    android:layout_height="match_parent"/>
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="50"
+                android:orientation="vertical"
+                android:id="@+id/svDescription"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/tvDescription"
+                    android:layout_margin="12dp"
+                    android:padding="12dp"
+                    android:maxLines="4"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/tvSeeMore"
+                    android:layout_marginStart="12dp"
+                    android:padding="12dp"
+                    android:visibility="gone"
+                    android:text="@string/ver_mas"
+                    android:textColor="@color/similYellow"
+                    android:fontFamily="@font/montserrat_italic"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvItsUsedOn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/montserrat_extra_bold"
+            android:text="@string/se_utiliza_en"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_below="@id/tvItsUsedOn"
+            android:layout_marginTop="20dp"
+            android:id="@+id/rvCocktailsByIngredient"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
+            tools:listitem="@layout/item_drink_minimal_view"
+            android:layout_height="wrap_content"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

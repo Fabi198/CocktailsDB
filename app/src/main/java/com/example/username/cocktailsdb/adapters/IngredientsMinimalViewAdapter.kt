@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.R
 import com.example.username.cocktailsdb.databinding.ItemIngredientBinding
-import com.example.username.cocktailsdb.entities.IngredientSimplifyView
+import com.example.username.cocktailsdb.entities.IngredientSimpleDTO
 
-class IngredientsAdapter (private val listIngredients: ArrayList<IngredientSimplifyView>, private val context: Context, private val onClick: (IngredientSimplifyView) -> Unit): RecyclerView.Adapter<IngredientsAdapter.IngredientsViewHolder>() {
+class IngredientsMinimalViewAdapter (private val listIngredients: ArrayList<IngredientSimpleDTO>, private val context: Context, private val onClick: (IngredientSimpleDTO) -> Unit): RecyclerView.Adapter<IngredientsMinimalViewAdapter.IngredientsViewHolder>() {
 
     inner class IngredientsViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
         private val binding = ItemIngredientBinding.bind(view)
 
         @SuppressLint("SetTextI18n")
-        fun bind(i: IngredientSimplifyView, context: Context, onClick: (IngredientSimplifyView) -> Unit) {
+        fun bind(i: IngredientSimpleDTO, context: Context, onClick: (IngredientSimpleDTO) -> Unit) {
             Glide.with(context)
                 .load(i.strImageSource)
                 .into(binding.ivIngredient)

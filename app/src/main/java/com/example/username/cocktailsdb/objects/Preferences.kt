@@ -51,4 +51,18 @@ object Preferences {
         )
     }
 
+    fun getFavoriteCocktailID(sharedPrefs: SharedPreferences, position: Int): String {
+        return when (position) {
+            0 -> { sharedPrefs.getString("popDrink1", "11000")!! }
+            1 -> { sharedPrefs.getString("popDrink2", "11001")!! }
+            2 -> { sharedPrefs.getString("popDrink3", "11002")!! }
+            3 -> { sharedPrefs.getString("popDrink4", "11003")!! }
+            4 -> { sharedPrefs.getString("popDrink5", "11004")!! }
+            5 -> { sharedPrefs.getString("popDrink6", "11005")!! }
+            6 -> { sharedPrefs.getString("popDrink7", "11006")!! }
+            7 -> { sharedPrefs.getString("popDrink8", "11007")!! }
+            else -> { "" }
+        }
+    }
+
 }

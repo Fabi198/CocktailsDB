@@ -2,7 +2,7 @@ package com.example.username.cocktailsdb.entities
 
 import com.google.gson.annotations.SerializedName
 
-data class DrinkDTO (
+data class CocktailDTO (
     @SerializedName("idDrink") val idDrink: String?,
     @SerializedName("strDrink") val strDrink: String?,
         @SerializedName("strDrinkAlternate") val strDrinkAlternate: String?,

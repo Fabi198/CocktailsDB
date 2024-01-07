@@ -10,10 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.R
-import com.example.username.cocktailsdb.adapters.IngredientsAdapter
+import com.example.username.cocktailsdb.adapters.IngredientsMinimalViewAdapter
 import com.example.username.cocktailsdb.databinding.FragmentCocktailFullViewBinding
-import com.example.username.cocktailsdb.entities.IngredientSimplifyView
+import com.example.username.cocktailsdb.entities.IngredientSimpleDTO
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
+import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment.showFragment
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
 import com.example.username.cocktailsdb.translator.TranslateService
 import kotlinx.coroutines.Dispatchers
@@ -43,8 +44,8 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
         if (idContainer != null && idDrink != null) {
             lifecycleScope.launch(Dispatchers.IO) {
                 val responseService =
-                    RetrofitCocktail.APICOCKTAILS.getPopularDrinks("lookup.php?i=$idDrink")
-                val cocktail = responseService.body()?.Drinks?.get(0)
+                    RetrofitCocktail.APICOCKTAILS.getCocktailsList("lookup.php?i=$idDrink")
+                val cocktail = responseService.body()?.cocktails?.get(0)
                 withContext(Dispatchers.Main) {
                     if(cocktail != null) {
                         binding.pbDrink.visibility = View.GONE
@@ -74,19 +75,19 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                         }
                         Glide.with(requireContext())
                             .load(cocktail.strDrinkThumb)
-                            .into(binding.ivDrink)
+                            .into(binding.ivCocktail)
                         binding.tvTitleDrink.text = cocktail.strDrink
                         binding.tvGlass.text = cocktail.strGlass
-                        binding.cvGlass.setOnClickListener {  }
+                        binding.cvGlass.setOnClickListener { showFragment(idContainer, requireActivity(), CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeGlass = binding.tvGlass.text.toString().replace(" ", "_")) }
                         binding.tvKind.text = cocktail.strAlcoholic
-                        binding.cvKind.setOnClickListener {  }
+                        binding.cvKind.setOnClickListener { showFragment(idContainer, requireActivity(), CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeKind = binding.tvKind.text.toString().replace(" ", "_")) }
                         binding.tvCategory.text = cocktail.strCategory
-                        binding.cvCategory.setOnClickListener {  }
+                        binding.cvCategory.setOnClickListener { showFragment(idContainer, requireActivity(), CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeCategory = binding.tvCategory.text.toString().replace(" ", "_")) }
                         binding.rvIngredients.layoutManager =
                             LinearLayoutManager(requireContext())
-                        val listIngredients = ArrayList<IngredientSimplifyView>()
+                        val listIngredients = ArrayList<IngredientSimpleDTO>()
                         if (cocktail.strIngredient1 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient1,
                                 cocktail.strMeasure1,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient1}-Small.png"
@@ -94,7 +95,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient2 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient2,
                                 cocktail.strMeasure2,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient2}-Small.png"
@@ -102,7 +103,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient3 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient3,
                                 cocktail.strMeasure3,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient3}-Small.png"
@@ -110,7 +111,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient4 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient4,
                                 cocktail.strMeasure4,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient4}-Small.png"
@@ -118,7 +119,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient5 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient5,
                                 cocktail.strMeasure5,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient5}-Small.png"
@@ -126,7 +127,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient6 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient6,
                                 cocktail.strMeasure6,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient6}-Small.png"
@@ -134,7 +135,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient7 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient7,
                                 cocktail.strMeasure7,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient7}-Small.png"
@@ -142,7 +143,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient8 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient8,
                                 cocktail.strMeasure8,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient8}-Small.png"
@@ -150,7 +151,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient9 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient9,
                                 cocktail.strMeasure9,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient9}-Small.png"
@@ -158,7 +159,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient10 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient10,
                                 cocktail.strMeasure10,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient10}-Small.png"
@@ -166,7 +167,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient11 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient11,
                                 cocktail.strMeasure11,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient11}-Small.png"
@@ -174,7 +175,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient12 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient12,
                                 cocktail.strMeasure12,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient12}-Small.png"
@@ -182,7 +183,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient13 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient13,
                                 cocktail.strMeasure13,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient13}-Small.png"
@@ -190,7 +191,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient14 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient14,
                                 cocktail.strMeasure14,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient14}-Small.png"
@@ -198,27 +199,21 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient15 != null) {
-                            val ingredient1 = IngredientSimplifyView(
+                            val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient15,
                                 cocktail.strMeasure15,
                                 "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient15}-Small.png"
                             )
                             listIngredients.add(ingredient1)
                         }
-                        /*
-                        val adapter = PopularDrinksOnClickedAdapter(listIngredients) {
+                        val adapter = IngredientsMinimalViewAdapter(listIngredients, requireContext()) {
                             showFragment(
                                 idContainer,
                                 requireActivity(),
-                                IngredientFullView(),
-                                "IngredientFullViewFragment",
-                                ingredientName = it
+                                IngredientFullViewFragment(),
+                                getString(R.string.ingredientfullviewfragment_tag),
+                                ingredientName = it.strIngredient
                             )
-                        }
-
-                         */
-                        val adapter = IngredientsAdapter(listIngredients, requireContext()) {
-
                         }
                         binding.rvIngredients.adapter = adapter
                     }

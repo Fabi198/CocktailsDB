@@ -32,12 +32,12 @@ object ArraysNames {
         "Ordinary Drink",
         "Cocktail",
         "Shake",
-        "Other/Unknown",
+        "Other / Unknown",
         "Cocoa",
         "Shot",
-        "Coffee/Tea",
+        "Coffee / Tea",
         "Homemade Liquieur",
-        "Punch/Party Drink",
+        "Punch / Party Drink",
         "Beer",
         "Soft Drink"
     )

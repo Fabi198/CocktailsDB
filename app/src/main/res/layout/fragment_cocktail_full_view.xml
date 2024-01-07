@@ -39,7 +39,7 @@
                 android:layout_height="500dp"
                 android:layout_alignParentTop="true"
                 android:scaleType="fitXY"
-                android:id="@+id/ivDrink"
+                android:id="@+id/ivCocktail"
                 android:contentDescription="@string/foto_ilustrativa_del_trago_seleccionado" />
 
             <androidx.appcompat.widget.Toolbar
@@ -111,7 +111,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="30"
                     app:strokeWidth="1.5dp"
-                    android:id="@+id/cvCategory"
+                    android:id="@+id/cvGlass"
                     android:layout_margin="4dp"
                     app:strokeColor="@color/orange"
                     android:layout_height="wrap_content">
@@ -132,7 +132,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="30"
                     app:strokeWidth="1.5dp"
-                    android:id="@+id/cvGlass"
+                    android:id="@+id/cvCategory"
                     android:layout_margin="4dp"
                     app:strokeColor="@color/orange"
                     android:layout_height="wrap_content">
