@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.R
@@ -23,7 +24,7 @@ class IngredientsMinimalViewAdapter (private val listIngredients: ArrayList<Ingr
                 .load(i.strImageSource)
                 .into(binding.ivIngredient)
             binding.tvNameIngredient.text = "${i.strIngredient} ${i.strMeasure}"
-            binding.cvMain.setOnClickListener { onClick(i) }
+            binding.cvMain.setOnClickListener { if (i.strIngredient != "Cherry") { onClick(i) } else { Toast.makeText(context, "Ingrediente no disponible", Toast.LENGTH_SHORT).show() } }
         }
 
 

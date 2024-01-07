@@ -3,8 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/graySuperDark"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.IngredientFullViewFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:src="@drawable/background_fragment"
+        android:scaleType="fitXY"
+        android:alpha="0.5"
+        android:id="@+id/ivBackground"
+        android:contentDescription="@string/todo"
+        android:layout_height="match_parent"/>
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -26,7 +36,7 @@
             android:layout_marginTop="60dp"
             android:textSize="24sp"
             android:textAlignment="center"
-            android:fontFamily="@font/montserrat_extra_bold_italic"
+            android:fontFamily="@font/montserrat_bold"
             android:id="@+id/tvTitleIngredient"
             android:layout_height="wrap_content"/>
 
@@ -34,7 +44,7 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_below="@id/tvTitleIngredient"
-            android:layout_above="@id/tvItsUsedOn"
+            android:layout_above="@id/cvItsUsedOn"
             android:layout_height="match_parent">
 
             <RelativeLayout
@@ -93,28 +103,53 @@
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/tvItsUsedOn"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:id="@+id/cvItsUsedOn"
             android:layout_centerVertical="true"
             android:layout_marginTop="40dp"
-            android:fontFamily="@font/montserrat_extra_bold"
-            android:text="@string/se_utiliza_en"
-            android:textAlignment="center"
-            android:textSize="16sp" />
+            app:strokeWidth="1dp"
+            app:cardCornerRadius="10dp"
+            app:strokeColor="@color/similYellow"
+            app:cardBackgroundColor="@color/similYellow"
+            android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
+            <TextView
+                android:id="@+id/tvItsUsedOn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_margin="4dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="@string/se_utiliza_en"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_below="@id/tvItsUsedOn"
-            android:layout_marginTop="20dp"
-            android:id="@+id/rvCocktailsByIngredient"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3"
-            tools:listitem="@layout/item_drink_minimal_view"
-            android:layout_height="wrap_content"/>
+            android:layout_below="@id/cvItsUsedOn"
+            app:strokeColor="@color/similYellow"
+            app:strokeWidth="1dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/transparent"
+            android:layout_margin="2dp"
+            android:layout_height="match_parent">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/rvCocktailsByIngredient"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="3"
+                android:layout_margin="2dp"
+                tools:listitem="@layout/item_drink_minimal_view"
+                android:layout_height="wrap_content"/>
+
+
+        </com.google.android.material.card.MaterialCardView>
 
     </RelativeLayout>
 

@@ -65,4 +65,8 @@
     <string name="cocktailname_tag">cocktailName</string>
     <string name="no_hay_resultados">No hay resultados</string>
     <string name="cocktailslistedfragment_tag">CocktailsListedFragment</string>
+    <string name="onzas">Onzas</string>
+    <string name="onzas_a_mililitros">Onzas a mililitros</string>
+    <string name="ml">**** ml</string>
+    <string name="equal">=</string>
 </resources>

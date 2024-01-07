@@ -1,16 +1,27 @@
 package com.example.username.cocktailsdb.fragments
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.R
 import com.example.username.cocktailsdb.adapters.IngredientsMinimalViewAdapter
+import com.example.username.cocktailsdb.databinding.CustomAlertDialogOuncesCalculatorBinding
 import com.example.username.cocktailsdb.databinding.FragmentCocktailFullViewBinding
 import com.example.username.cocktailsdb.entities.IngredientSimpleDTO
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
@@ -20,6 +31,7 @@ import com.example.username.cocktailsdb.translator.TranslateService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.roundToInt
 
 
 class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) {
@@ -83,6 +95,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                         binding.cvKind.setOnClickListener { showFragment(idContainer, requireActivity(), CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeKind = binding.tvKind.text.toString().replace(" ", "_")) }
                         binding.tvCategory.text = cocktail.strCategory
                         binding.cvCategory.setOnClickListener { showFragment(idContainer, requireActivity(), CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeCategory = binding.tvCategory.text.toString().replace(" ", "_")) }
+                        binding.btnCalculator.setOnClickListener { showCalculatorDialog() }
                         binding.rvIngredients.layoutManager =
                             LinearLayoutManager(requireContext())
                         val listIngredients = ArrayList<IngredientSimpleDTO>()
@@ -111,6 +124,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient4 != null) {
+                            Log.i("Portet", "${cocktail.strIngredient4}, ${cocktail.strMeasure4}")
                             val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient4,
                                 cocktail.strMeasure4,
@@ -207,6 +221,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         val adapter = IngredientsMinimalViewAdapter(listIngredients, requireContext()) {
+                            Log.i("Portet", "${it.strIngredient}, ${it.strMeasure}, ${it.strImageSource}")
                             showFragment(
                                 idContainer,
                                 requireActivity(),
@@ -220,6 +235,45 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                 }
             }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showCalculatorDialog() {
+        val binding = CustomAlertDialogOuncesCalculatorBinding.inflate(LayoutInflater.from(requireContext()))
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(binding.root)
+            .setCancelable(true)
+            .create()
+        binding.etOunces.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().isNotEmpty() && binding.etOunces.text.toString() != ".") {
+                    val result = (binding.etOunces.text.toString().toDouble() * 29.574)
+                    val roundoff = (result * 100.0).roundToInt().toDouble() / 100.0
+                    binding.tvResult.setText("$roundoff ml")
+                } else {
+                    binding.tvResult.setText(getString(R.string.ml))
+                }
+            }
+
+        })
+        binding.etOunces.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (binding.etOunces.text.toString().isNotEmpty()) {
+                    val imm = requireActivity().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.llMain.windowToken, 0)
+                    val result = (binding.etOunces.text.toString().toDouble() * 29.574)
+                    val roundoff = (result * 100.0).roundToInt().toDouble() / 100.0
+                    binding.tvResult.setText("$roundoff ml")
+                    binding.etOunces.setText("")
+                }
+                return@setOnKeyListener true }
+            false
+        }
+        alertDialog.show()
     }
 
 }

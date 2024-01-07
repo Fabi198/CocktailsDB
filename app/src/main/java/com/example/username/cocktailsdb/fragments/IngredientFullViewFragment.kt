@@ -2,6 +2,8 @@ package com.example.username.cocktailsdb.fragments
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -28,6 +30,7 @@ import kotlinx.coroutines.withContext
 class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_view) {
 
     private lateinit var binding: FragmentIngredientFullViewBinding
+    private lateinit var descTranslated: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,6 +43,7 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
 
     private fun setupUI(idContainer: Int?, ingredientName: String?) {
         if (idContainer != null && ingredientName != null) {
+            Log.i("Portet", ingredientName)
             lifecycleScope.launch(Dispatchers.IO) {
                 val translator = TranslateService
                 val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=$ingredientName")
@@ -60,7 +64,6 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
                                     target: com.bumptech.glide.request.target.Target<Drawable>?,
                                     isFirstResource: Boolean
                                 ): Boolean {
-                                    // Ocurrió un fallo en la carga de la imagen
                                     binding.pbIvIngredient.visibility = View.GONE
                                     binding.ivIngredient.visibility = View.VISIBLE
                                     Toast.makeText(requireContext(), "Error al cargar la imagen", Toast.LENGTH_SHORT).show()
@@ -83,18 +86,23 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
                             .into(binding.ivIngredient)
 
                         binding.tvDescription.text = ingredientDTO?.ingredient?.get(0)?.strDescription
+                        ingredientDTO?.ingredient?.get(0)?.strDescription?.let {
+                            translator.englishSpanishTranslator.translate(it)
+                                .addOnSuccessListener { itES ->
+                                    binding.tvDescription.text = itES
+                                    descTranslated = itES
+                                }
+                        }
                         binding.tvDescription.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                             override fun onGlobalLayout() {
-                                // Verificar la cantidad de líneas después de que el texto cambie
                                 if (binding.tvDescription.lineCount > 4) {
                                     binding.tvSeeMore.visibility = View.VISIBLE
                                 }
-                                // Remover el listener para evitar múltiples llamadas
                                 binding.tvDescription.viewTreeObserver.removeOnGlobalLayoutListener(this)
                             }
                         })
                         if (binding.tvDescription.lineCount > 4) { binding.tvSeeMore.visibility = View.VISIBLE }
-                        binding.tvSeeMore.setOnClickListener { showDialogFullDescription(ingredientDTO?.ingredient?.get(0)?.strDescription) }
+                        binding.tvSeeMore.setOnClickListener { showDialogFullDescription(descTranslated) }
                         if (responseService2.isSuccessful) {
                             val listCocktails = cocktails?.cocktails
                             val adapter = CocktailsMinimalViewAdapter(listCocktails!!, requireContext()) {
@@ -107,6 +115,8 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
                                 )
                             }
                             binding.rvCocktailsByIngredient.adapter = adapter
+                        } else {
+                            Toast.makeText(requireContext(), "Error en la base de datos", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

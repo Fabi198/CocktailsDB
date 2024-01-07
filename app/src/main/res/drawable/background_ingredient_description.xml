@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#80424242"/> <!-- Color de fondo semi-transparente (RGBA: #RRGGBBAA) -->
+    <solid android:color="@color/black"/> <!-- Color de fondo semi-transparente (RGBA: #RRGGBBAA) -->
 </shape>

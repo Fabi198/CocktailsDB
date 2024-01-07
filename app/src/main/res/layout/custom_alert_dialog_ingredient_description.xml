@@ -1,17 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/background_ingredient_description"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:alpha="1"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:fontFamily="@font/montserrat_regular"
-        android:id="@+id/tvDescFull"/>
+        app:strokeColor="@color/similYellow"
+        app:strokeWidth="1dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:padding="16dp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:id="@+id/tvDescFull"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="@string/traducido_por_google"
+                    android:layout_marginStart="12dp"
+                    android:paddingStart="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/montserrat_italic"
+                    android:id="@+id/tvTranslatedByGoogle"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
 
 
-</ScrollView>
+
+        </ScrollView>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+</LinearLayout>
