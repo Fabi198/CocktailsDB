@@ -19,6 +19,7 @@ import com.example.username.cocktailsdb.R
 import com.example.username.cocktailsdb.adapters.CocktailsMinimalViewAdapter
 import com.example.username.cocktailsdb.databinding.CustomAlertDialogIngredientDescriptionBinding
 import com.example.username.cocktailsdb.databinding.FragmentIngredientFullViewBinding
+import com.example.username.cocktailsdb.objects.DarkMode.isDarkModeEnabled
 import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment.showFragment
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
 import com.example.username.cocktailsdb.translator.TranslateService
@@ -52,6 +53,10 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
                 val cocktails = responseService2.body()
                 withContext(Dispatchers.Main) {
                     if (responseService.isSuccessful) {
+                        if (!isDarkModeEnabled(requireContext())) {
+                            binding.tvTitleIngredient.setTextColor(resources.getColor(R.color.white, null))
+                            binding.tvDescription.setTextColor(resources.getColor(R.color.white, null))
+                        }
                         binding.pbIngredient.visibility = View.GONE
                         binding.rlMain.visibility = View.VISIBLE
                         binding.tvTitleIngredient.text = ingredientDTO?.ingredient?.get(0)?.strIngredient
@@ -84,7 +89,6 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
                                 }
                             })
                             .into(binding.ivIngredient)
-
                         binding.tvDescription.text = ingredientDTO?.ingredient?.get(0)?.strDescription
                         ingredientDTO?.ingredient?.get(0)?.strDescription?.let {
                             translator.englishSpanishTranslator.translate(it)

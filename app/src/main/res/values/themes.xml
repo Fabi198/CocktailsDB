@@ -5,6 +5,8 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/mainbackground</item>
+        <!-- Modificar el color de texto primario -->
+        <item name="android:textColorPrimary">@color/black</item>
     </style>
 
     <style name="Theme.CocktailsDB" parent="Base.Theme.CocktailsDB" />

@@ -61,12 +61,13 @@
     <string name="ingredientfullviewfragment_tag">IngredientFullViewFragment</string>
     <string name="imagen_ilustrativa_del_ingrediente">Imagen ilustrativa del ingrediente</string>
     <string name="se_utiliza_en">Se utiliza en:</string>
-    <string name="ver_mas">Ver mas...</string>
+    <string name="ver_mas">Ver mas…</string>
     <string name="cocktailname_tag">cocktailName</string>
-    <string name="no_hay_resultados">No hay resultados</string>
+    <string name="no_hay_resultados">¡No hay resultados!</string>
     <string name="cocktailslistedfragment_tag">CocktailsListedFragment</string>
     <string name="onzas">Onzas</string>
     <string name="onzas_a_mililitros">Onzas a mililitros</string>
     <string name="ml">**** ml</string>
     <string name="equal">=</string>
+    <string name="guardar_cocktail">Guardar cocktail</string>
 </resources>

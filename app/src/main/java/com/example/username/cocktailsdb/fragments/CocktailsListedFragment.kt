@@ -8,6 +8,7 @@ import com.example.username.cocktailsdb.R
 import com.example.username.cocktailsdb.adapters.CocktailsMinimalViewAdapter
 import com.example.username.cocktailsdb.databinding.FragmentCocktailsListedBinding
 import com.example.username.cocktailsdb.entities.CocktailSimpleDTO
+import com.example.username.cocktailsdb.objects.DarkMode
 import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment.showFragment
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
 import kotlinx.coroutines.Dispatchers
@@ -90,6 +91,7 @@ class CocktailsListedFragment : Fragment(R.layout.fragment_cocktails_listed) {
             binding.rvCocktailsByIngredient.adapter = adapter
             binding.rvCocktailsByIngredient.visibility = View.VISIBLE
         } else {
+            if (!DarkMode.isDarkModeEnabled(requireContext())) { binding.tvNoResults.setTextColor(resources.getColor(R.color.white, null)) }
             binding.tvNoResults.visibility = View.VISIBLE
         }
     }

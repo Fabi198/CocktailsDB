@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,10 +23,13 @@ import com.example.username.cocktailsdb.adapters.IngredientsMinimalViewAdapter
 import com.example.username.cocktailsdb.databinding.CustomAlertDialogOuncesCalculatorBinding
 import com.example.username.cocktailsdb.databinding.FragmentCocktailFullViewBinding
 import com.example.username.cocktailsdb.entities.IngredientSimpleDTO
+import com.example.username.cocktailsdb.objects.DarkMode.isDarkModeEnabled
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
 import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment.showFragment
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
 import com.example.username.cocktailsdb.translator.TranslateService
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -60,6 +62,51 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                 val cocktail = responseService.body()?.cocktails?.get(0)
                 withContext(Dispatchers.Main) {
                     if(cocktail != null) {
+                        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+                        val userId: String? = account!!.id
+                        val usersReference = FirebaseFirestore.getInstance().collection("users").document(userId!!)
+
+                        usersReference.get()
+                            .addOnSuccessListener { documentSnapshot ->
+                                if (documentSnapshot.exists()) {
+                                    // Verificamos si el campo 'cocktailIDs' contiene el idDrink a consultar
+                                    val cocktailIDsMap = documentSnapshot["cocktailIDs"] as? Map<String, Boolean>
+                                    if (cocktailIDsMap != null && cocktailIDsMap.containsKey(idDrink)) {
+                                        Log.i("Portet", "El idDrink '$idDrink' está presente en cocktailIDs")
+                                        binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
+                                    } else {
+                                        Log.i("Portet", "El idDrink '$idDrink' NO está presente en cocktailIDs")
+                                    }
+                                } else {
+                                    Log.e("Firebase", "El documento 'users' no existe")
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Firebase", "Error al obtener el documento 'users': $e")
+                            }
+                        if (!isDarkModeEnabled(requireContext())) {
+                            binding.tvTitleDrink.setTextColor(resources.getColor(R.color.white, null))
+                            binding.tvInstructions.setTextColor(resources.getColor(R.color.white, null))
+                            binding.tvTranslatedByGoogle.setTextColor(resources.getColor(R.color.white, null))
+                        }
+                        //val saveCocktailDrawable =
+                        //binding.btnSaveCocktail.setImageResource()
+                        binding.btnSaveCocktail.setOnClickListener {
+                            binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
+                            usersReference.update("cocktailIDs.$idDrink", true)
+                                .addOnSuccessListener {
+                                    Log.i("Portet", "Cocktail '$idDrink' agregado exitosamente")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("Firebase", "Error al agregar el cocktail '$idDrink': $e")
+                                    Toast.makeText(requireContext(), "Error al agregar el cocktail '$idDrink': $e", Toast.LENGTH_SHORT).show()
+                                    binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_border_24)
+                                }
+
+                        }
+                        binding.btnAddToFavorites.setOnClickListener {
+
+                        }
                         binding.pbDrink.visibility = View.GONE
                         binding.appBarLayout.visibility = View.VISIBLE
                         binding.nestedScrollView.visibility = View.VISIBLE

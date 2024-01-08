@@ -1,17 +1,23 @@
 package com.example.username.cocktailsdb.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.R
+import com.example.username.cocktailsdb.databinding.DrawerListGroupBinding
 import com.example.username.cocktailsdb.databinding.DrawerListItemBinding
+import com.example.username.cocktailsdb.objects.Preferences.isSessionSaved
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
-class DrawerExpandableListAdapter(private val context: Context) : BaseExpandableListAdapter() {
+class DrawerExpandableListAdapter(private val activity: Activity, private val context: Context) : BaseExpandableListAdapter() {
 
-    private val groups = arrayOf("Buscar por vaso", "Buscar por categoria", "Buscar por tipo")
+    private val groups = arrayOf("Buscar por vaso", "Buscar por categoria", "Buscar por tipo", "Mi Cuenta")
     private val children: Map<String, List<Pair<Int, String>>> = mapOf(
         "Buscar por vaso" to listOf(
             R.drawable.glass_highball to "Highball glass",
@@ -52,11 +58,14 @@ class DrawerExpandableListAdapter(private val context: Context) : BaseExpandable
         "Buscar por tipo" to listOf(
             0 to "Alcoholic",
             0 to "Optional alcohol",
-            0 to "Non alcoholic")
+            0 to "Non alcoholic"),
         // Agrega más opciones adicionales según sea necesario
+        "Mi Cuenta" to listOf(
+            0 to "Mis Cocteles"
+        )
     )
 
-    override fun getGroupCount(): Int = groups.size
+    override fun getGroupCount(): Int = if (isSessionSaved(activity.getSharedPreferences(context.getString(R.string.preferences), Context.MODE_PRIVATE))) { groups.size } else { groups.size - 1 }
 
     override fun getChildrenCount(groupPosition: Int): Int = children[groups[groupPosition]]?.size ?: 0
 
@@ -71,8 +80,34 @@ class DrawerExpandableListAdapter(private val context: Context) : BaseExpandable
     override fun hasStableIds(): Boolean = true
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val view = LayoutInflater.from(context).inflate(R.layout.drawer_list_group, parent, false) as TextView
-        view.text = getGroup(groupPosition).toString()
+        //val view = LayoutInflater.from(context).inflate(R.layout.drawer_list_group, parent, false) as TextView
+        //view.text = getGroup(groupPosition).toString()
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.drawer_list_group, parent, false)
+        val binding = DrawerListGroupBinding.bind(view)
+
+        binding.listHeader.text = getGroup(groupPosition).toString()
+
+        binding.ivProfile.visibility = if (groupPosition == 3) View.VISIBLE else View.GONE
+
+        if (groupPosition == 3) {
+            val account = GoogleSignIn.getLastSignedInAccount(context)
+            if (account != null) {
+                // Obtener la URL de la foto de perfil
+                val photoUrl: Uri? = account.photoUrl
+
+                // Verificar si hay una URL de foto de perfil
+                if (photoUrl != null) {
+                    // Cargar la foto de perfil utilizando Glide
+                    Glide.with(context)
+                        .load(photoUrl)
+                        .into(binding.ivProfile)
+                } else {
+                    // Si no hay URL de foto de perfil, puedes establecer una imagen predeterminada
+                    binding.ivProfile.setImageResource(R.drawable.placeholder_60_x_60)
+                }
+            }
+        }
+
         return view
     }
 

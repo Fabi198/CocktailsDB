@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_alignParentTop="true"
             android:layout_marginTop="60dp"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textAlignment="center"
             android:fontFamily="@font/montserrat_bold"
             android:id="@+id/tvTitleIngredient"
@@ -45,7 +45,8 @@
             android:orientation="horizontal"
             android:layout_below="@id/tvTitleIngredient"
             android:layout_above="@id/cvItsUsedOn"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:baselineAligned="false">
 
             <RelativeLayout
                 android:layout_width="0dp"
