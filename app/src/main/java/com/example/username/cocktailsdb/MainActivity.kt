@@ -260,7 +260,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupDrawerContent() {
-        val expandableListAdapter = DrawerExpandableListAdapter(this)
+        val expandableListAdapter = DrawerExpandableListAdapter(this, this)
         binding.expandableListView.setAdapter(expandableListAdapter)
 
         binding.expandableListView.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->

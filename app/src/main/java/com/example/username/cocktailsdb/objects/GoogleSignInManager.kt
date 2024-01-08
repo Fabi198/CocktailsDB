@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.NonNull
 import com.example.username.cocktailsdb.MainActivity
 import com.example.username.cocktailsdb.R
 import com.example.username.cocktailsdb.objects.Preferences.saveGoogleUserData
@@ -15,6 +16,12 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 
 class GoogleSignInManager private constructor() {
 
@@ -99,6 +106,28 @@ class GoogleSignInManager private constructor() {
                     Log.d("PortetGoogle", "signInWithCredential:success")
                     val user = mAuth!!.currentUser
                     saveGoogleUserData(activity!!.getSharedPreferences("Preferences", Context.MODE_PRIVATE), user!!.email!!, providerType.GOOGLE)
+                    val account = GoogleSignIn.getLastSignedInAccount(context!!)
+                    val userId: String? = account!!.id
+                    val usersReference = FirebaseFirestore.getInstance().collection("users").document(userId!!)
+                    usersReference.get()
+                        .addOnSuccessListener { documentSnapshot ->
+                            if (!documentSnapshot.exists()) {
+                                // El documento "users" para este usuario no existe, así que lo creamos
+                                Log.i("Portet", "Aca")
+                                usersReference.set(mapOf("cocktailIDs" to emptyMap<String, Boolean>()))
+                                    .addOnSuccessListener {
+                                        Log.i("Portet", "Campo 'cocktailIDs' creado exitosamente")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("Firebase", "Error al crear el campo 'cocktailIDs': $e")
+                                    }
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            // Manejar errores
+                            Log.i("Portet", "Aca si")
+                            Log.e("Firebase", "Error al obtener el documento 'users': $e")
+                        }
                     Toast.makeText(context, "Signed in successfully", Toast.LENGTH_SHORT).show()
                     activity!!.startActivity(Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 

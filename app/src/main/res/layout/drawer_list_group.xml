@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- res/layout/drawer_list_group.xml -->
-<TextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/listHeader"
-    android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
-    android:gravity="center_vertical"
-    android:textSize="16sp"
-    android:fontFamily="@font/montserrat_medium"
-    android:textStyle="bold"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    tools:ignore="RtlSymmetry" />
+    android:orientation="horizontal"
+    android:layout_width="match_parent">
+
+    <TextView
+        android:id="@+id/listHeader"
+        android:layout_width="0dp"
+        android:layout_weight="9"
+        android:layout_height="50dp"
+        android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_medium"
+        android:textStyle="bold"
+        android:background="?android:attr/activatedBackgroundIndicator"
+        tools:ignore="RtlSymmetry" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="36dp"
+        android:id="@+id/ivProfile"
+        android:visibility="gone"
+        android:layout_marginEnd="12dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/pop_drink_3"
+        android:layout_height="36dp"/>
+
+</LinearLayout>
