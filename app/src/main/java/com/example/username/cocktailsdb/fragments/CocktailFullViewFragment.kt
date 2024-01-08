@@ -69,6 +69,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                         usersReference.get()
                             .addOnSuccessListener { documentSnapshot ->
                                 if (documentSnapshot.exists()) {
+
                                     // Verificamos si el campo 'cocktailIDs' contiene el idDrink a consultar
                                     val cocktailIDsMap = documentSnapshot["cocktailIDs"] as? Map<String, Boolean>
                                     if (cocktailIDsMap != null && cocktailIDsMap.containsKey(idDrink)) {
