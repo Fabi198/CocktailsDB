@@ -70,4 +70,5 @@
     <string name="ml">**** ml</string>
     <string name="equal">=</string>
     <string name="guardar_cocktail">Guardar cocktail</string>
+    <string name="cocktailssaved_tag">cocktailsSaved</string>
 </resources>

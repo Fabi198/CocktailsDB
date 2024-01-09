@@ -69,4 +69,5 @@
     <string name="onzas_a_mililitros">Onzas a mililitros</string>
     <string name="ml">**** ml</string>
     <string name="equal">=</string>
+    <string name="cocktailssaved_tag">cocktailsSaved</string>
 </resources>

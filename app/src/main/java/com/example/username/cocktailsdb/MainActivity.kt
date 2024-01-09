@@ -24,6 +24,7 @@ import com.example.username.cocktailsdb.databinding.ActivityMainBinding
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayCategories
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayGlasses
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayKinds
+import com.example.username.cocktailsdb.entities.ArraysNames.arrayMyAccount
 import com.example.username.cocktailsdb.fragments.CocktailFullViewFragment
 import com.example.username.cocktailsdb.fragments.CocktailsListedFragment
 import com.example.username.cocktailsdb.fragments.IngredientFullViewFragment
@@ -276,6 +277,9 @@ class MainActivity : AppCompatActivity() {
                 in arrayKinds -> {
                     showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeKind = childData.second.replace(" ", "_"))
                 }
+                in arrayMyAccount -> {
+                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), cocktailsSaved = true)
+                }
             }
             for (i in 0 until expandableListAdapter.groupCount) {
                 binding.expandableListView.collapseGroup(i)
@@ -352,7 +356,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showFragment(fragment: Fragment, tag: String, typeKind: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, cocktailName: String? = null) {
+    private fun showFragment(fragment: Fragment, tag: String, typeKind: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, cocktailName: String? = null, cocktailsSaved: Boolean? = null) {
         val bundle = Bundle()
         bundle.putInt(getString(R.string.idcontainer_tag), binding.containerFragment.id)
         if (typeKind != null) { bundle.putString(getString(R.string.kind_tag), typeKind) }
@@ -362,6 +366,7 @@ class MainActivity : AppCompatActivity() {
         if (idIngredient != null) { bundle.putInt(getString(R.string.idingredient_tag), Integer.parseInt(idIngredient)) }
         if (ingredientName != null) { bundle.putString(getString(R.string.ingredient_tag), ingredientName) }
         if (cocktailName != null) { bundle.putString(getString(R.string.cocktailname_tag), cocktailName) }
+        if (cocktailsSaved != null) { bundle.putBoolean(getString(R.string.cocktailssaved_tag), cocktailsSaved) }
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(binding.containerFragment.id, fragment, tag).addToBackStack(tag).commit()
         allGone()

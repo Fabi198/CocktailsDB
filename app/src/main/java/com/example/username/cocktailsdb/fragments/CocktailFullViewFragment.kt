@@ -29,6 +29,7 @@ import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment.showFra
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
 import com.example.username.cocktailsdb.translator.TranslateService
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +41,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
 
 
     private lateinit var binding: FragmentCocktailFullViewBinding
+    private var cocktailSaved = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,12 +71,12 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                         usersReference.get()
                             .addOnSuccessListener { documentSnapshot ->
                                 if (documentSnapshot.exists()) {
-
                                     // Verificamos si el campo 'cocktailIDs' contiene el idDrink a consultar
                                     val cocktailIDsMap = documentSnapshot["cocktailIDs"] as? Map<String, Boolean>
                                     if (cocktailIDsMap != null && cocktailIDsMap.containsKey(idDrink)) {
                                         Log.i("Portet", "El idDrink '$idDrink' está presente en cocktailIDs")
                                         binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
+                                        cocktailSaved = true
                                     } else {
                                         Log.i("Portet", "El idDrink '$idDrink' NO está presente en cocktailIDs")
                                     }
@@ -93,16 +95,31 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                         //val saveCocktailDrawable =
                         //binding.btnSaveCocktail.setImageResource()
                         binding.btnSaveCocktail.setOnClickListener {
-                            binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
-                            usersReference.update("cocktailIDs.$idDrink", true)
-                                .addOnSuccessListener {
-                                    Log.i("Portet", "Cocktail '$idDrink' agregado exitosamente")
-                                }
-                                .addOnFailureListener { e ->
-                                    Log.e("Firebase", "Error al agregar el cocktail '$idDrink': $e")
-                                    Toast.makeText(requireContext(), "Error al agregar el cocktail '$idDrink': $e", Toast.LENGTH_SHORT).show()
-                                    binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_border_24)
-                                }
+                            if (!cocktailSaved) {
+                                binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
+                                usersReference.update("cocktailIDs.$idDrink", true)
+                                    .addOnSuccessListener {
+                                        Log.i("Portet", "Cocktail '$idDrink' agregado exitosamente")
+                                        cocktailSaved = true
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("Firebase", "Error al agregar el cocktail '$idDrink': $e")
+                                        Toast.makeText(requireContext(), "Error al agregar el cocktail '$idDrink': $e", Toast.LENGTH_SHORT).show()
+                                        binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_border_24)
+                                    }
+                            } else {
+                                binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_border_24)
+                                usersReference.update("cocktailIDs.$idDrink", FieldValue.delete())
+                                    .addOnSuccessListener {
+                                        Log.i("Portet", "Cocktail '$idDrink' eliminado exitosamente")
+                                        cocktailSaved = false
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("Firebase", "Error al eliminar el cocktail '$idDrink': $e")
+                                        binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
+                                    }
+                            }
+
 
                         }
                         binding.btnAddToFavorites.setOnClickListener {

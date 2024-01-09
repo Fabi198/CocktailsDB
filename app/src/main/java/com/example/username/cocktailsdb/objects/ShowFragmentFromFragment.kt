@@ -3,6 +3,7 @@ package com.example.username.cocktailsdb.objects
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.example.username.cocktailsdb.R
 
 object ShowFragmentFromFragment {
 
@@ -17,7 +18,8 @@ object ShowFragmentFromFragment {
         idDrink: String? = null,
         idIngredient: String? = null,
         ingredientName: String? = null,
-        cocktailName: String? = null
+        cocktailName: String? = null,
+        cocktailsSaved: Boolean? = null
     ) {
         val bundle = Bundle()
         bundle.putInt("idContainer", idContainer)
@@ -28,6 +30,7 @@ object ShowFragmentFromFragment {
         if (idIngredient != null) { bundle.putInt("idIngredient", Integer.parseInt(idIngredient)) }
         if (ingredientName != null) { bundle.putString("Ingredient", ingredientName) }
         if (cocktailName != null) { bundle.putString("cocktailName", cocktailName) }
+        if (cocktailsSaved != null) { bundle.putBoolean("cocktailsSaved", cocktailsSaved) }
         fragment.arguments = bundle
         activity.supportFragmentManager
             .beginTransaction()

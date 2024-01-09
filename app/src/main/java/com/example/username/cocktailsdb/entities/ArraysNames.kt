@@ -47,4 +47,8 @@ object ArraysNames {
         "Non alcoholic",
         "Optional alcohol"
     )
+
+    val arrayMyAccount = arrayOf(
+        "Mis Cocteles"
+    )
 }
