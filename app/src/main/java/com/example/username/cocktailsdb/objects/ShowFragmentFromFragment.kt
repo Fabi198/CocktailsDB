@@ -19,7 +19,8 @@ object ShowFragmentFromFragment {
         idIngredient: String? = null,
         ingredientName: String? = null,
         cocktailName: String? = null,
-        cocktailsSaved: Boolean? = null
+        cocktailsSaved: Boolean? = null,
+        letter: String?= null
     ) {
         val bundle = Bundle()
         bundle.putInt("idContainer", idContainer)
@@ -31,6 +32,7 @@ object ShowFragmentFromFragment {
         if (ingredientName != null) { bundle.putString("Ingredient", ingredientName) }
         if (cocktailName != null) { bundle.putString("cocktailName", cocktailName) }
         if (cocktailsSaved != null) { bundle.putBoolean("cocktailsSaved", cocktailsSaved) }
+        if (letter != null) { bundle.putString("letter", letter) }
         fragment.arguments = bundle
         activity.supportFragmentManager
             .beginTransaction()

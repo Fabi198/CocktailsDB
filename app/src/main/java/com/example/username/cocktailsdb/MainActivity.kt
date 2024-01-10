@@ -6,12 +6,14 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
@@ -21,9 +23,12 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.adapters.DrawerExpandableListAdapter
 import com.example.username.cocktailsdb.databinding.ActivityMainBinding
+import com.example.username.cocktailsdb.databinding.CustomAlertDialogAddToFavoritesBinding
+import com.example.username.cocktailsdb.databinding.CustomAlertDialogYonBinding
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayCategories
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayGlasses
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayKinds
+import com.example.username.cocktailsdb.entities.ArraysNames.arrayLetters
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayMyAccount
 import com.example.username.cocktailsdb.fragments.CocktailFullViewFragment
 import com.example.username.cocktailsdb.fragments.CocktailsListedFragment
@@ -34,6 +39,7 @@ import com.example.username.cocktailsdb.objects.Preferences.getFavoritesCocktail
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
 import com.example.username.cocktailsdb.objects.Preferences.getToastTwoBackShowed
 import com.example.username.cocktailsdb.objects.Preferences.isSessionSaved
+import com.example.username.cocktailsdb.objects.Preferences.restoreFavoriteCocktailsDefault
 import com.example.username.cocktailsdb.objects.Preferences.saveLanguagePreference
 import com.example.username.cocktailsdb.objects.Preferences.setToastTwoBackShowed
 import com.example.username.cocktailsdb.objects.ProviderType
@@ -185,6 +191,12 @@ class MainActivity : AppCompatActivity() {
         binding.expandableListView.visibility = View.GONE
         binding.llPreferences.visibility = View.VISIBLE
 
+
+        binding.btnResetFavorites.setOnClickListener {
+            showSureDialog("restoreFavorites")
+            binding.dlMain.closeDrawers()
+        }
+
         val animDown: Animation = AnimationUtils.loadAnimation(this, R.anim.scroll_to_down)
         val animUp: Animation = AnimationUtils.loadAnimation(this, R.anim.scroll_to_up)
 
@@ -232,7 +244,28 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun showSureDialog(task: String) {
+        val binding = CustomAlertDialogYonBinding.inflate(LayoutInflater.from(this))
+        val alertDialog = AlertDialog.Builder(this)
+            .setView(binding.root)
+            .setCancelable(true)
+            .create()
+        when (task) {
+            "restoreFavorites" -> {
+                binding.btnYes.setOnClickListener {
+                    restoreFavoriteCocktailsDefault(getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE))
+                    alertDialog.dismiss()
+                    startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                }
+            }
+            else -> {}
+        }
+        binding.btnNo.setOnClickListener { alertDialog.dismiss() }
+        alertDialog.show()
+    }
+
     private fun setupDrawerNavigationBar() {
+        binding.ivLogoMain.setOnClickListener { startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)) }
         if (isSessionSaved(sharedPrefs)) {
             binding.cvCloseSession.btnCloseSession.visibility = View.VISIBLE
         } else {
@@ -277,6 +310,9 @@ class MainActivity : AppCompatActivity() {
                 in arrayKinds -> {
                     showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeKind = childData.second.replace(" ", "_"))
                 }
+                in arrayLetters -> {
+                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), letter = childData.second.lowercase())
+                }
                 in arrayMyAccount -> {
                     showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), cocktailsSaved = true)
                 }
@@ -318,10 +354,8 @@ class MainActivity : AppCompatActivity() {
         if (binding.llPreferences.visibility == View.VISIBLE) {
             binding.llPreferences.visibility = View.GONE
             binding.expandableListView.visibility = View.VISIBLE
-            Log.i("PortetBack", "1")
         } else if (binding.dlMain.isDrawerOpen(GravityCompat.START)) {
             binding.dlMain.closeDrawer(GravityCompat.START)
-            Log.i("PortetBack", "2")
         } else {
             if (supportFragmentManager.backStackEntryCount > 1) {
                 val currentTime = System.currentTimeMillis()
@@ -329,24 +363,19 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.popBackStack()
                     startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-                    Log.i("PortetBack", "3")
                 } else {
                     lastClickTime = currentTime
                     if (!getToastTwoBackShowed(sharedPrefs)) {
                         Toast.makeText(this, getString(R.string.presiona_2_veces_para_volver_al_inicio), Toast.LENGTH_SHORT).show()
                         setToastTwoBackShowed(sharedPrefs, true)
-                        Log.i("PortetBack", "4")
                     }
                     supportFragmentManager.popBackStack()
-                    Log.i("PortetBack", "5")
                 }
             } else if (supportFragmentManager.backStackEntryCount == 1) {
                 supportFragmentManager.popBackStack()
                 allVisible()
-                Log.i("PortetBack", "6")
             } else {
                 super.onBackPressed()
-                Log.i("PortetBack", "7")
                 finish()
             }
         }
@@ -356,7 +385,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showFragment(fragment: Fragment, tag: String, typeKind: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, cocktailName: String? = null, cocktailsSaved: Boolean? = null) {
+    private fun showFragment(fragment: Fragment, tag: String, typeKind: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, cocktailName: String? = null, cocktailsSaved: Boolean? = null, letter: String ?= null) {
         val bundle = Bundle()
         bundle.putInt(getString(R.string.idcontainer_tag), binding.containerFragment.id)
         if (typeKind != null) { bundle.putString(getString(R.string.kind_tag), typeKind) }
@@ -367,6 +396,7 @@ class MainActivity : AppCompatActivity() {
         if (ingredientName != null) { bundle.putString(getString(R.string.ingredient_tag), ingredientName) }
         if (cocktailName != null) { bundle.putString(getString(R.string.cocktailname_tag), cocktailName) }
         if (cocktailsSaved != null) { bundle.putBoolean(getString(R.string.cocktailssaved_tag), cocktailsSaved) }
+        if (letter != null) { bundle.putString(getString(R.string.letter_tag), letter) }
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(binding.containerFragment.id, fragment, tag).addToBackStack(tag).commit()
         allGone()

@@ -44,7 +44,6 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
 
     private fun setupUI(idContainer: Int?, ingredientName: String?) {
         if (idContainer != null && ingredientName != null) {
-            Log.i("Portet", ingredientName)
             lifecycleScope.launch(Dispatchers.IO) {
                 val translator = TranslateService
                 val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=$ingredientName")
@@ -109,7 +108,7 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
                         binding.tvSeeMore.setOnClickListener { showDialogFullDescription(descTranslated) }
                         if (responseService2.isSuccessful) {
                             val listCocktails = cocktails?.cocktails
-                            val adapter = CocktailsMinimalViewAdapter(listCocktails!!, requireContext()) {
+                            val adapter = CocktailsMinimalViewAdapter(listCocktails!!, requireContext(), false, {
                                 showFragment(
                                     idContainer,
                                     requireActivity(),
@@ -117,7 +116,7 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
                                     getString(R.string.cocktailfullviewfragment_tag),
                                     idDrink = it.idDrink
                                 )
-                            }
+                            }, {})
                             binding.rvCocktailsByIngredient.adapter = adapter
                         } else {
                             Toast.makeText(requireContext(), "Error en la base de datos", Toast.LENGTH_SHORT).show()

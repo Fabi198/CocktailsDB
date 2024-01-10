@@ -65,4 +65,34 @@ object Preferences {
         }
     }
 
+    fun setFavoriteCocktailID(sharedPrefs: SharedPreferences, position: Int, idDrink: String) {
+        val popDrink = when (position) {
+            0 -> "popDrink1"
+            1 -> "popDrink2"
+            2 -> "popDrink3"
+            3 -> "popDrink4"
+            4 -> "popDrink5"
+            5 -> "popDrink6"
+            6 -> "popDrink7"
+            7 -> "popDrink8"
+            else -> ""
+        }
+        val editor = sharedPrefs.edit()
+        editor.putString(popDrink, idDrink)
+        editor.apply()
+    }
+
+    fun restoreFavoriteCocktailsDefault(sharedPrefs: SharedPreferences) {
+        val editor = sharedPrefs.edit()
+        editor.putString("popDrink1", "11000")
+        editor.putString("popDrink2", "11001")
+        editor.putString("popDrink3", "11002")
+        editor.putString("popDrink4", "11003")
+        editor.putString("popDrink5", "11004")
+        editor.putString("popDrink6", "11005")
+        editor.putString("popDrink7", "11006")
+        editor.putString("popDrink8", "11007")
+        editor.apply()
+    }
+
 }

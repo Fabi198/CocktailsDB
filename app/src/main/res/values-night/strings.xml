@@ -70,4 +70,6 @@
     <string name="ml">**** ml</string>
     <string name="equal">=</string>
     <string name="cocktailssaved_tag">cocktailsSaved</string>
+    <string name="elija_una_posici_n">Elija una posición</string>
+    <string name="est_seguro">¿Está seguro?</string>
 </resources>

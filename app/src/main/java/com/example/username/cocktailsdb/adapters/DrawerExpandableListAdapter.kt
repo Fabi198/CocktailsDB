@@ -17,7 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 class DrawerExpandableListAdapter(private val activity: Activity, private val context: Context) : BaseExpandableListAdapter() {
 
-    private val groups = arrayOf("Buscar por vaso", "Buscar por categoria", "Buscar por tipo", "Mi Cuenta")
+    private val groups = arrayOf("Buscar por vaso", "Buscar por categoria", "Buscar por tipo", "Buscar por letra", "Mi Cuenta")
     private val children: Map<String, List<Pair<Int, String>>> = mapOf(
         "Buscar por vaso" to listOf(
             R.drawable.glass_highball to "Highball glass",
@@ -59,6 +59,34 @@ class DrawerExpandableListAdapter(private val activity: Activity, private val co
             0 to "Alcoholic",
             0 to "Optional alcohol",
             0 to "Non alcoholic"),
+        "Buscar por letra" to listOf(
+            0 to "A",
+            0 to "B",
+            0 to "C",
+            0 to "D",
+            0 to "E",
+            0 to "F",
+            0 to "G",
+            0 to "H",
+            0 to "I",
+            0 to "J",
+            0 to "K",
+            0 to "L",
+            0 to "M",
+            0 to "N",
+            0 to "O",
+            0 to "P",
+            0 to "Q",
+            0 to "R",
+            0 to "S",
+            0 to "T",
+            0 to "U",
+            0 to "V",
+            0 to "W",
+            0 to "X",
+            0 to "Y",
+            0 to "Z"
+        ),
         // Agrega más opciones adicionales según sea necesario
         "Mi Cuenta" to listOf(
             0 to "Mis Cocteles"
@@ -87,9 +115,9 @@ class DrawerExpandableListAdapter(private val activity: Activity, private val co
 
         binding.listHeader.text = getGroup(groupPosition).toString()
 
-        binding.ivProfile.visibility = if (groupPosition == 3) View.VISIBLE else View.GONE
+        binding.ivProfile.visibility = if (groupPosition == 4) View.VISIBLE else View.GONE
 
-        if (groupPosition == 3) {
+        if (groupPosition == 4) {
             val account = GoogleSignIn.getLastSignedInAccount(context)
             if (account != null) {
                 // Obtener la URL de la foto de perfil

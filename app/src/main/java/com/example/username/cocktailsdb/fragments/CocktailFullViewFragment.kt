@@ -11,6 +11,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,11 +21,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.R
 import com.example.username.cocktailsdb.adapters.IngredientsMinimalViewAdapter
+import com.example.username.cocktailsdb.databinding.CustomAlertDialogAddToFavoritesBinding
 import com.example.username.cocktailsdb.databinding.CustomAlertDialogOuncesCalculatorBinding
 import com.example.username.cocktailsdb.databinding.FragmentCocktailFullViewBinding
 import com.example.username.cocktailsdb.entities.IngredientSimpleDTO
 import com.example.username.cocktailsdb.objects.DarkMode.isDarkModeEnabled
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
+import com.example.username.cocktailsdb.objects.Preferences.setFavoriteCocktailID
 import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment.showFragment
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
 import com.example.username.cocktailsdb.translator.TranslateService
@@ -92,8 +95,6 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             binding.tvInstructions.setTextColor(resources.getColor(R.color.white, null))
                             binding.tvTranslatedByGoogle.setTextColor(resources.getColor(R.color.white, null))
                         }
-                        //val saveCocktailDrawable =
-                        //binding.btnSaveCocktail.setImageResource()
                         binding.btnSaveCocktail.setOnClickListener {
                             if (!cocktailSaved) {
                                 binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
@@ -123,7 +124,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
 
                         }
                         binding.btnAddToFavorites.setOnClickListener {
-
+                            showAddToFavoritesDialog(idDrink, binding.btnAddToFavorites)
                         }
                         binding.pbDrink.visibility = View.GONE
                         binding.appBarLayout.visibility = View.VISIBLE
@@ -140,6 +141,7 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                         if (instructionsToQuery != null && getLanguagePreference(requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)) != getString(R.string.english)) {
                             binding.pbDrinkInstructions.visibility = View.GONE
                             binding.tvInstructions.text = instructionsToQuery
+                            binding.tvTranslatedByGoogle.visibility = View.GONE
                         } else {
                             cocktail.strInstructionsEN?.let {
                                 translator.englishSpanishTranslator.translate(it)
@@ -189,7 +191,6 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         if (cocktail.strIngredient4 != null) {
-                            Log.i("Portet", "${cocktail.strIngredient4}, ${cocktail.strMeasure4}")
                             val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient4,
                                 cocktail.strMeasure4,
@@ -286,7 +287,6 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             listIngredients.add(ingredient1)
                         }
                         val adapter = IngredientsMinimalViewAdapter(listIngredients, requireContext()) {
-                            Log.i("Portet", "${it.strIngredient}, ${it.strMeasure}, ${it.strImageSource}")
                             showFragment(
                                 idContainer,
                                 requireActivity(),
@@ -337,6 +337,55 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                 }
                 return@setOnKeyListener true }
             false
+        }
+        alertDialog.show()
+    }
+
+    private fun showAddToFavoritesDialog(idDrink: String, btnAddToFavorites: ImageButton) {
+        val binding = CustomAlertDialogAddToFavoritesBinding.inflate(LayoutInflater.from(requireContext()))
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(binding.root)
+            .setCancelable(true)
+            .create()
+        binding.btn0.setOnClickListener {
+            setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 0, idDrink)
+            btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+            alertDialog.dismiss()
+        }
+        binding.btn1.setOnClickListener {
+            setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 1, idDrink)
+            btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+            alertDialog.dismiss()
+        }
+        binding.btn2.setOnClickListener {
+            setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 2, idDrink)
+            btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+            alertDialog.dismiss()
+        }
+        binding.btn3.setOnClickListener {
+            setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 3, idDrink)
+            btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+            alertDialog.dismiss()
+        }
+        binding.btn4.setOnClickListener {
+            setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 4, idDrink)
+            btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+            alertDialog.dismiss()
+        }
+        binding.btn5.setOnClickListener {
+            setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 5, idDrink)
+            btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+            alertDialog.dismiss()
+        }
+        binding.btn6.setOnClickListener {
+            setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 6, idDrink)
+            btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+            alertDialog.dismiss()
+        }
+        binding.btn7.setOnClickListener {
+            setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 7, idDrink)
+            btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+            alertDialog.dismiss()
         }
         alertDialog.show()
     }

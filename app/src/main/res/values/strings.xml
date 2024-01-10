@@ -71,4 +71,9 @@
     <string name="equal">=</string>
     <string name="guardar_cocktail">Guardar cocktail</string>
     <string name="cocktailssaved_tag">cocktailsSaved</string>
+    <string name="elija_una_posici_n">Elija una posición</string>
+    <string name="restablecer_favoritos">Restablecer favoritos</string>
+    <string name="est_seguro">¿Está seguro?</string>
+    <string name="no">No</string>
+    <string name="si">Si</string>
 </resources>

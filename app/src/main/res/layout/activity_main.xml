@@ -523,6 +523,17 @@
             <TextView
                 android:layout_width="match_parent"
                 android:fontFamily="@font/montserrat_bold"
+                android:id="@+id/btnResetFavorites"
+                android:padding="16dp"
+                android:background="?android:attr/windowBackground"
+                android:elevation="10dp"
+                android:text="@string/restablecer_favoritos"
+                android:layout_height="wrap_content"
+                app:drawableEndCompat="@drawable/baseline_restore_24" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:fontFamily="@font/montserrat_bold"
                 android:id="@+id/btnShowLanguageOptions"
                 android:padding="16dp"
                 android:background="?android:attr/windowBackground"

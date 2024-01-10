@@ -113,7 +113,6 @@ class GoogleSignInManager private constructor() {
                         .addOnSuccessListener { documentSnapshot ->
                             if (!documentSnapshot.exists()) {
                                 // El documento "users" para este usuario no existe, así que lo creamos
-                                Log.i("Portet", "Aca")
                                 usersReference.set(mapOf("cocktailIDs" to emptyMap<String, Boolean>()))
                                     .addOnSuccessListener {
                                         Log.i("Portet", "Campo 'cocktailIDs' creado exitosamente")
@@ -125,7 +124,6 @@ class GoogleSignInManager private constructor() {
                         }
                         .addOnFailureListener { e ->
                             // Manejar errores
-                            Log.i("Portet", "Aca si")
                             Log.e("Firebase", "Error al obtener el documento 'users': $e")
                         }
                     Toast.makeText(context, "Signed in successfully", Toast.LENGTH_SHORT).show()
