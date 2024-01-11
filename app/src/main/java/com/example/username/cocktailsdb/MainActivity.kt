@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +22,6 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.adapters.DrawerExpandableListAdapter
 import com.example.username.cocktailsdb.databinding.ActivityMainBinding
-import com.example.username.cocktailsdb.databinding.CustomAlertDialogAddToFavoritesBinding
 import com.example.username.cocktailsdb.databinding.CustomAlertDialogYonBinding
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayCategories
 import com.example.username.cocktailsdb.entities.ArraysNames.arrayGlasses
@@ -42,8 +40,6 @@ import com.example.username.cocktailsdb.objects.Preferences.isSessionSaved
 import com.example.username.cocktailsdb.objects.Preferences.restoreFavoriteCocktailsDefault
 import com.example.username.cocktailsdb.objects.Preferences.saveLanguagePreference
 import com.example.username.cocktailsdb.objects.Preferences.setToastTwoBackShowed
-import com.example.username.cocktailsdb.objects.ProviderType
-import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -71,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         setupFavoriteCocktails()
         setupSearchers()
 
+        binding.btnRandomCocktail.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), random = true) }
         binding.cvCloseSession.btnGoogle.setOnClickListener { googleSignInManager!!.signIn() }
         binding.cvCloseSession.btnCloseSession.setOnClickListener { googleSignInManager!!.signOut() }
         binding.cvCloseSession.btnPreferences.setOnClickListener { showPreferences() }
@@ -244,7 +241,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showSureDialog(task: String) {
+    private fun showSureDialog(@Suppress("SameParameterValue") task: String) {
         val binding = CustomAlertDialogYonBinding.inflate(LayoutInflater.from(this))
         val alertDialog = AlertDialog.Builder(this)
             .setView(binding.root)
@@ -385,7 +382,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showFragment(fragment: Fragment, tag: String, typeKind: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, cocktailName: String? = null, cocktailsSaved: Boolean? = null, letter: String ?= null) {
+    private fun showFragment(fragment: Fragment, tag: String, typeKind: String? = null, typeGlass: String? = null, typeCategory: String? = null, idDrink: String? = null, idIngredient: String? = null, ingredientName: String? = null, cocktailName: String? = null, cocktailsSaved: Boolean? = null, letter: String ?= null, random: Boolean? = null) {
         val bundle = Bundle()
         bundle.putInt(getString(R.string.idcontainer_tag), binding.containerFragment.id)
         if (typeKind != null) { bundle.putString(getString(R.string.kind_tag), typeKind) }
@@ -397,6 +394,7 @@ class MainActivity : AppCompatActivity() {
         if (cocktailName != null) { bundle.putString(getString(R.string.cocktailname_tag), cocktailName) }
         if (cocktailsSaved != null) { bundle.putBoolean(getString(R.string.cocktailssaved_tag), cocktailsSaved) }
         if (letter != null) { bundle.putString(getString(R.string.letter_tag), letter) }
+        if (random != null) { bundle.putBoolean(getString(R.string.random_tag), random) }
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(binding.containerFragment.id, fragment, tag).addToBackStack(tag).commit()
         allGone()
@@ -404,12 +402,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun allVisible() {
+        setupFavoriteCocktails()
         binding.containerFragment.visibility = View.GONE
         binding.ivBackground.visibility = View.VISIBLE
         binding.cvSearch.visibility = View.VISIBLE
         binding.cvIngredientSearch.visibility = View.VISIBLE
         binding.tvPopDrinksTitle.visibility = View.VISIBLE
         binding.tlPopCocktails.visibility = View.VISIBLE
+        binding.btnRandomCocktail.visibility = View.VISIBLE
     }
 
     private fun allGone() {
@@ -418,6 +418,7 @@ class MainActivity : AppCompatActivity() {
         binding.cvIngredientSearch.visibility = View.GONE
         binding.tvPopDrinksTitle.visibility = View.GONE
         binding.tlPopCocktails.visibility = View.GONE
+        binding.btnRandomCocktail.visibility = View.GONE
     }
 
     override fun onDestroy() {

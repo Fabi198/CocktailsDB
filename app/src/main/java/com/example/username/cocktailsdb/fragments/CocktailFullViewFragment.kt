@@ -3,6 +3,8 @@ package com.example.username.cocktailsdb.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +29,10 @@ import com.example.username.cocktailsdb.databinding.CustomAlertDialogOuncesCalcu
 import com.example.username.cocktailsdb.databinding.FragmentCocktailFullViewBinding
 import com.example.username.cocktailsdb.entities.IngredientSimpleDTO
 import com.example.username.cocktailsdb.objects.DarkMode.isDarkModeEnabled
+import com.example.username.cocktailsdb.objects.Preferences.getFavoriteCocktailID
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
+import com.example.username.cocktailsdb.objects.Preferences.isThereAlreadyOnFavorites
+import com.example.username.cocktailsdb.objects.Preferences.resetFavoriteDrink
 import com.example.username.cocktailsdb.objects.Preferences.setFavoriteCocktailID
 import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment.showFragment
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
@@ -45,25 +51,33 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
 
     private lateinit var binding: FragmentCocktailFullViewBinding
     private var cocktailSaved = false
+    private lateinit var sharedPrefs: SharedPreferences
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCocktailFullViewBinding.bind(view)
         val idContainer = arguments?.getInt(getString(R.string.idcontainer_tag))
         val idDrink = arguments?.getString(getString(R.string.iddrink_tag))
+        val random = arguments?.getBoolean(getString(R.string.random_tag))
+        sharedPrefs = requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE)
 
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
         binding.collapsingToolbarLayout.title = " "
 
-        setupUI(idContainer, idDrink)
+        setupUI(idContainer, idDrink, random)
     }
 
-    private fun setupUI(idContainer: Int?, idDrink: String?) {
-        if (idContainer != null && idDrink != null) {
+    private fun setupUI(idContainer: Int?, idDrink: String?, random: Boolean?) {
+        if (idContainer != null && (idDrink != null || random != null)) {
             lifecycleScope.launch(Dispatchers.IO) {
-                val responseService =
-                    RetrofitCocktail.APICOCKTAILS.getCocktailsList("lookup.php?i=$idDrink")
+                val link = if (random != null && random == true) {
+                    "random.php"
+                } else {
+                    "lookup.php?i=$idDrink"
+                }
+                val responseService = RetrofitCocktail.APICOCKTAILS.getCocktailsList(link)
+
                 val cocktail = responseService.body()?.cocktails?.get(0)
                 withContext(Dispatchers.Main) {
                     if(cocktail != null) {
@@ -77,11 +91,11 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                                     // Verificamos si el campo 'cocktailIDs' contiene el idDrink a consultar
                                     val cocktailIDsMap = documentSnapshot["cocktailIDs"] as? Map<String, Boolean>
                                     if (cocktailIDsMap != null && cocktailIDsMap.containsKey(idDrink)) {
-                                        Log.i("Portet", "El idDrink '$idDrink' está presente en cocktailIDs")
+                                        Log.i("Portet", "El idDrink '${cocktail.idDrink}' está presente en cocktailIDs")
                                         binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
                                         cocktailSaved = true
                                     } else {
-                                        Log.i("Portet", "El idDrink '$idDrink' NO está presente en cocktailIDs")
+                                        Log.i("Portet", "El idDrink '${cocktail.idDrink}' NO está presente en cocktailIDs")
                                     }
                                 } else {
                                     Log.e("Firebase", "El documento 'users' no existe")
@@ -90,6 +104,9 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                             .addOnFailureListener { e ->
                                 Log.e("Firebase", "Error al obtener el documento 'users': $e")
                             }
+                        if (isThereAlreadyOnFavorites(sharedPrefs, cocktail.idDrink.toString())) {
+                            binding.btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)
+                        }
                         if (!isDarkModeEnabled(requireContext())) {
                             binding.tvTitleDrink.setTextColor(resources.getColor(R.color.white, null))
                             binding.tvInstructions.setTextColor(resources.getColor(R.color.white, null))
@@ -98,21 +115,21 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                         binding.btnSaveCocktail.setOnClickListener {
                             if (!cocktailSaved) {
                                 binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_24)
-                                usersReference.update("cocktailIDs.$idDrink", true)
+                                usersReference.update("cocktailIDs.${cocktail.idDrink}", true)
                                     .addOnSuccessListener {
-                                        Log.i("Portet", "Cocktail '$idDrink' agregado exitosamente")
+                                        Log.i("Portet", "Cocktail '${cocktail.idDrink}' agregado exitosamente")
                                         cocktailSaved = true
                                     }
                                     .addOnFailureListener { e ->
-                                        Log.e("Firebase", "Error al agregar el cocktail '$idDrink': $e")
-                                        Toast.makeText(requireContext(), "Error al agregar el cocktail '$idDrink': $e", Toast.LENGTH_SHORT).show()
+                                        Log.e("Firebase", "Error al agregar el cocktail '${cocktail.idDrink}': $e")
+                                        Toast.makeText(requireContext(), "Error al agregar el cocktail '${cocktail.idDrink}': $e", Toast.LENGTH_SHORT).show()
                                         binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_border_24)
                                     }
                             } else {
                                 binding.btnSaveCocktail.setImageResource(R.drawable.baseline_bookmark_border_24)
-                                usersReference.update("cocktailIDs.$idDrink", FieldValue.delete())
+                                usersReference.update("cocktailIDs.${cocktail.idDrink}", FieldValue.delete())
                                     .addOnSuccessListener {
-                                        Log.i("Portet", "Cocktail '$idDrink' eliminado exitosamente")
+                                        Log.i("Portet", "Cocktail '${cocktail.idDrink}' eliminado exitosamente")
                                         cocktailSaved = false
                                     }
                                     .addOnFailureListener { e ->
@@ -124,7 +141,12 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
 
                         }
                         binding.btnAddToFavorites.setOnClickListener {
-                            showAddToFavoritesDialog(idDrink, binding.btnAddToFavorites)
+                            if (!isThereAlreadyOnFavorites(sharedPrefs, cocktail.idDrink.toString())) {
+                                showAddToFavoritesDialog(cocktail.idDrink.toString(), binding.btnAddToFavorites)
+                            } else {
+                                resetFavoriteDrink(sharedPrefs, cocktail.idDrink.toString())
+                            }
+
                         }
                         binding.pbDrink.visibility = View.GONE
                         binding.appBarLayout.visibility = View.VISIBLE
@@ -166,22 +188,8 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
                         binding.rvIngredients.layoutManager =
                             LinearLayoutManager(requireContext())
                         val listIngredients = ArrayList<IngredientSimpleDTO>()
-                        if (cocktail.strIngredient1 != null) {
-                            val ingredient1 = IngredientSimpleDTO(
-                                cocktail.strIngredient1,
-                                cocktail.strMeasure1,
-                                "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient1}-Small.png"
-                            )
-                            listIngredients.add(ingredient1)
-                        }
-                        if (cocktail.strIngredient2 != null) {
-                            val ingredient1 = IngredientSimpleDTO(
-                                cocktail.strIngredient2,
-                                cocktail.strMeasure2,
-                                "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient2}-Small.png"
-                            )
-                            listIngredients.add(ingredient1)
-                        }
+                        if (cocktail.strIngredient1 != null) { listIngredients.add(IngredientSimpleDTO(cocktail.strIngredient1, cocktail.strMeasure1, "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient1}-Small.png")) }
+                        if (cocktail.strIngredient2 != null) { listIngredients.add(IngredientSimpleDTO(cocktail.strIngredient2, cocktail.strMeasure2, "https://www.thecocktaildb.com/images/ingredients/${cocktail.strIngredient2}-Small.png")) }
                         if (cocktail.strIngredient3 != null) {
                             val ingredient1 = IngredientSimpleDTO(
                                 cocktail.strIngredient3,
@@ -341,12 +349,40 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
         alertDialog.show()
     }
 
+    private fun getCocktailImage(position: Int, ivDrink: ImageView, btn: ImageButton): String {
+        var strDrinkThumb = ""
+        val id = getFavoriteCocktailID(sharedPrefs, position)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val responseService = RetrofitCocktail.APICOCKTAILS.getCocktailsList("lookup.php?i=$id")
+            val cocktail = responseService.body()?.cocktails?.get(0)
+            withContext(Dispatchers.Main) {
+                if (cocktail != null) {
+                    if (cocktail.strDrinkThumb != null) {
+                        strDrinkThumb = cocktail.strDrinkThumb
+                        Glide.with(requireContext()).load(cocktail.strDrinkThumb).into(ivDrink)
+                        btn.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.white, null))
+                    }
+                }
+            }
+        }
+        return strDrinkThumb
+    }
+
     private fun showAddToFavoritesDialog(idDrink: String, btnAddToFavorites: ImageButton) {
         val binding = CustomAlertDialogAddToFavoritesBinding.inflate(LayoutInflater.from(requireContext()))
         val alertDialog = AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .setCancelable(true)
             .create()
+        getCocktailImage(0, binding.ivDrink0, binding.btn0)
+        getCocktailImage(1, binding.ivDrink1, binding.btn1)
+        getCocktailImage(2, binding.ivDrink2, binding.btn2)
+        getCocktailImage(3, binding.ivDrink3, binding.btn3)
+        getCocktailImage(4, binding.ivDrink4, binding.btn4)
+        getCocktailImage(5, binding.ivDrink5, binding.btn5)
+        getCocktailImage(6, binding.ivDrink6, binding.btn6)
+        getCocktailImage(7, binding.ivDrink7, binding.btn7)
+
         binding.btn0.setOnClickListener {
             setFavoriteCocktailID(requireActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE), 0, idDrink)
             btnAddToFavorites.setImageResource(R.drawable.baseline_star_24)

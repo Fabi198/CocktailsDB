@@ -76,4 +76,5 @@
     <string name="est_seguro">¿Está seguro?</string>
     <string name="no">No</string>
     <string name="si">Si</string>
+    <string name="random_tag">random</string>
 </resources>

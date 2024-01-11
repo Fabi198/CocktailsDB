@@ -1,7 +1,6 @@
 package com.example.username.cocktailsdb.objects
 
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 
 object Preferences {
 
@@ -49,6 +48,30 @@ object Preferences {
             sharedPrefs.getString("popDrink7", "11006"),
             sharedPrefs.getString("popDrink8", "11007")
         )
+    }
+
+    fun isThereAlreadyOnFavorites(sharedPrefs: SharedPreferences, idDrink: String): Boolean {
+        return getFavoritesCocktailsIDs(sharedPrefs).contains(idDrink)
+    }
+
+    fun resetFavoriteDrink(sharedPrefs: SharedPreferences, idDrink: String) {
+        getFavoritesCocktailsIDs(sharedPrefs).forEachIndexed { index, s ->
+            if (idDrink == s) {
+                val editor = sharedPrefs.edit()
+                editor.remove(when (index) {
+                    0 -> "popDrink1"
+                    1 -> "popDrink2"
+                    2 -> "popDrink3"
+                    3 -> "popDrink4"
+                    4 -> "popDrink5"
+                    5 -> "popDrink6"
+                    6 -> "popDrink7"
+                    7 -> "popDrink8"
+                    else -> ""
+                })
+                editor.apply()
+            }
+        }
     }
 
     fun getFavoriteCocktailID(sharedPrefs: SharedPreferences, position: Int): String {

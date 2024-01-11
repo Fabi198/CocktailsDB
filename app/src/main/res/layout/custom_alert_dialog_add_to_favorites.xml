@@ -46,14 +46,22 @@
                     app:cardCornerRadius="8dp"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/todo"
+                        android:id="@+id/ivDrink0"
+                        android:layout_height="56dp"/>
+
                     <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="56dp"
                         android:contentDescription="@string/todo"
                         android:id="@+id/btn0"
                         android:background="@null"
                         android:padding="16dp"
                         android:src="@drawable/baseline_add_circle_24"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="56dp"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -65,14 +73,22 @@
                     app:cardCornerRadius="8dp"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/todo"
+                        android:id="@+id/ivDrink1"
+                        android:layout_height="56dp"/>
+
                     <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="56dp"
                         android:contentDescription="@string/todo"
                         android:id="@+id/btn1"
                         android:background="@null"
                         android:padding="16dp"
                         android:src="@drawable/baseline_add_circle_24"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="56dp"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -84,14 +100,22 @@
                     app:cardCornerRadius="8dp"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/todo"
+                        android:id="@+id/ivDrink2"
+                        android:layout_height="56dp"/>
+
                     <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="56dp"
                         android:contentDescription="@string/todo"
                         android:id="@+id/btn2"
                         android:background="@null"
                         android:padding="16dp"
                         android:src="@drawable/baseline_add_circle_24"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="56dp"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -103,14 +127,22 @@
                     app:cardCornerRadius="8dp"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/todo"
+                        android:id="@+id/ivDrink3"
+                        android:layout_height="56dp"/>
+
                     <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="56dp"
                         android:contentDescription="@string/todo"
                         android:id="@+id/btn3"
                         android:background="@null"
                         android:padding="16dp"
                         android:src="@drawable/baseline_add_circle_24"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="56dp"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -135,14 +167,22 @@
                     app:cardCornerRadius="8dp"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/todo"
+                        android:id="@+id/ivDrink4"
+                        android:layout_height="56dp"/>
+
                     <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="56dp"
                         android:contentDescription="@string/todo"
                         android:id="@+id/btn4"
                         android:background="@null"
                         android:padding="16dp"
                         android:src="@drawable/baseline_add_circle_24"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="56dp"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -154,14 +194,22 @@
                     app:cardCornerRadius="8dp"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/todo"
+                        android:id="@+id/ivDrink5"
+                        android:layout_height="56dp"/>
+
                     <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="56dp"
                         android:contentDescription="@string/todo"
                         android:id="@+id/btn5"
                         android:background="@null"
                         android:padding="16dp"
                         android:src="@drawable/baseline_add_circle_24"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="56dp"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -173,14 +221,22 @@
                     app:cardCornerRadius="8dp"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/todo"
+                        android:id="@+id/ivDrink6"
+                        android:layout_height="56dp"/>
+
                     <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="56dp"
                         android:contentDescription="@string/todo"
                         android:id="@+id/btn6"
                         android:background="@null"
                         android:padding="16dp"
                         android:src="@drawable/baseline_add_circle_24"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="56dp"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -192,14 +248,22 @@
                     app:cardCornerRadius="8dp"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/todo"
+                        android:id="@+id/ivDrink7"
+                        android:layout_height="56dp"/>
+
                     <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="56dp"
                         android:contentDescription="@string/todo"
                         android:id="@+id/btn7"
                         android:background="@null"
                         android:padding="16dp"
                         android:src="@drawable/baseline_add_circle_24"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="56dp" />
 
                 </com.google.android.material.card.MaterialCardView>
 
