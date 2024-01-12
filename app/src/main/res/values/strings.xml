@@ -77,4 +77,6 @@
     <string name="no">No</string>
     <string name="si">Si</string>
     <string name="random_tag">random</string>
+    <string name="ver_original">Ver original</string>
+    <string name="ver_traducci_n">Ver traducción</string>
 </resources>

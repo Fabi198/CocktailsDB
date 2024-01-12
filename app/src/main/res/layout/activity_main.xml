@@ -28,14 +28,34 @@
             android:elevation="10dp"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_gravity="end|center_vertical"
-                android:layout_margin="4dp"
-                android:id="@+id/ivLogoMain"
-                android:src="@drawable/logo_main"
-                android:layout_height="50dp"
-                android:contentDescription="@string/todo" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/ivLogoMain"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="invisible"
+                    android:id="@+id/tvKindOrGlassOrCategory"
+                    android:fontFamily="@font/montserrat_bold_italic"
+                    android:textColor="@color/similYellow"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="4dp"
+                    android:id="@+id/ivLogoMain"
+                    android:src="@drawable/logo_main"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/todo" />
+
+            </RelativeLayout>
+
+
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -68,6 +88,7 @@
                     android:textColorHint="@color/gray"
                     android:singleLine="true"
                     android:inputType="text"
+                    android:imeOptions="actionSearch"
                     android:id="@+id/etSearch"
                     android:fontFamily="@font/montserrat_regular"
                     android:importantForAutofill="no"
