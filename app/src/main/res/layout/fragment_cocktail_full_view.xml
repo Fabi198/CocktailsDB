@@ -85,8 +85,8 @@
                 app:layout_constraintTop_toTopOf="@id/btnCalculator"
                 app:layout_constraintBottom_toBottomOf="@id/btnCalculator"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnSaveCocktail"
                 android:id="@+id/tvTitleDrink"
-                android:text="Long Island Tea"
                 android:fontFamily="@font/montserrat_bold"
                 android:layout_height="wrap_content"/>
 
@@ -94,10 +94,12 @@
                 android:layout_width="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/tvTitleDrink"
                 app:layout_constraintTop_toTopOf="@id/tvTitleDrink"
+                app:layout_constraintEnd_toStartOf="@id/btnAddToFavorites"
                 app:layout_constraintBottom_toBottomOf="@id/tvTitleDrink"
                 android:layout_marginStart="8dp"
                 android:src="@drawable/baseline_bookmark_border_24"
                 android:background="@null"
+                android:visibility="gone"
                 android:padding="8dp"
                 android:id="@+id/btnSaveCocktail"
                 android:contentDescription="@string/guardar_cocktail"
@@ -241,6 +243,20 @@
                 android:visibility="gone"
                 android:fontFamily="@font/montserrat_italic"
                 android:id="@+id/tvTranslatedByGoogle"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvInstructions"
+                app:layout_constraintStart_toEndOf="@id/tvTranslatedByGoogle"
+                android:text="@string/ver_original"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="12dp"
+                android:textSize="11sp"
+                android:visibility="gone"
+                android:textColor="@color/similYellow"
+                android:fontFamily="@font/montserrat_italic"
+                android:id="@+id/btnSeeOriginal"
                 android:layout_height="wrap_content"/>
 
             <androidx.recyclerview.widget.RecyclerView

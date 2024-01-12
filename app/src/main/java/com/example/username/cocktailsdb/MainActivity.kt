@@ -32,6 +32,7 @@ import com.example.username.cocktailsdb.fragments.CocktailFullViewFragment
 import com.example.username.cocktailsdb.fragments.CocktailsListedFragment
 import com.example.username.cocktailsdb.fragments.IngredientFullViewFragment
 import com.example.username.cocktailsdb.objects.GoogleSignInManager
+import com.example.username.cocktailsdb.objects.NetworkManager.isNetworkAvailable
 import com.example.username.cocktailsdb.objects.Preferences.getFavoriteCocktailID
 import com.example.username.cocktailsdb.objects.Preferences.getFavoritesCocktailsIDs
 import com.example.username.cocktailsdb.objects.Preferences.getLanguagePreference
@@ -64,12 +65,20 @@ class MainActivity : AppCompatActivity() {
 
         setupDrawerNavigationBar()
         setupDrawerContent()
-        setupFavoriteCocktails()
         setupSearchers()
 
-        binding.btnRandomCocktail.setOnClickListener { showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), random = true) }
-        binding.cvCloseSession.btnGoogle.setOnClickListener { googleSignInManager!!.signIn() }
-        binding.cvCloseSession.btnCloseSession.setOnClickListener { googleSignInManager!!.signOut() }
+        if (isNetworkAvailable(this)) { setupFavoriteCocktails() } else { showToastNoConnection() }
+
+        binding.btnRandomCocktail.setOnClickListener {
+            if (isNetworkAvailable(this)) {
+                showFragment(CocktailFullViewFragment(), getString(R.string.cocktailfullviewfragment_tag), random = true)
+            } else {
+                // Muestra un mensaje de error o realiza acciones alternativas en caso de falta de conexión
+                Toast.makeText(this, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.cvCloseSession.btnGoogle.setOnClickListener { if (isNetworkAvailable(this)) { googleSignInManager!!.signIn() } else { showToastNoConnection() } }
+        binding.cvCloseSession.btnCloseSession.setOnClickListener { if (isNetworkAvailable(this)) { googleSignInManager!!.signOut() } else { showToastNoConnection() } }
         binding.cvCloseSession.btnPreferences.setOnClickListener { showPreferences() }
     }
 
@@ -79,18 +88,29 @@ class MainActivity : AppCompatActivity() {
                 if (binding.etSearch.text.toString().isNotEmpty()) {
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
-                    showFragment(CocktailsListedFragment(), "CocktailListedFragment", cocktailName = binding.etSearch.text.toString().replace(" ", ""))
-                    binding.etSearch.text = null
+                    if (isNetworkAvailable(this)) {
+                        showFragment(CocktailsListedFragment(), "CocktailListedFragment", cocktailName = binding.etSearch.text.toString().replace(" ", ""))
+                        binding.etSearch.text = null
+                    } else {
+                        binding.etSearch.text = null
+                        Toast.makeText(this, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                return@setOnKeyListener true }
+                return@setOnKeyListener true
+            }
             false
         }
         binding.btnSearch.setOnClickListener {
             if (binding.etSearch.text.toString().isNotEmpty()) {
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
-                showFragment(CocktailsListedFragment(), "CocktailListedFragment", cocktailName = binding.etSearch.text.toString().replace(" ", ""))
-                binding.etSearch.text = null
+                if (isNetworkAvailable(this)) {
+                    showFragment(CocktailsListedFragment(), "CocktailListedFragment", cocktailName = binding.etSearch.text.toString().replace(" ", ""))
+                    binding.etSearch.text = null
+                } else {
+                    binding.etSearch.text = null
+                    Toast.makeText(this, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+                }
             }
         }
         binding.etIngredientSearch.setOnKeyListener { _, keyCode, event ->
@@ -99,6 +119,35 @@ class MainActivity : AppCompatActivity() {
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
                     lifecycleScope.launch(Dispatchers.IO) {
+                        if (isNetworkAvailable(this@MainActivity)) {
+                            val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=${binding.etIngredientSearch.text}")
+                            val ingredientDTO = responseService.body()
+                            withContext(Dispatchers.Main) {
+                                if (ingredientDTO?.ingredient != null) {
+                                    showFragment(IngredientFullViewFragment(), getString(R.string.ingredientfullviewfragment_tag), ingredientName = ingredientDTO.ingredient[0].strIngredient)
+                                } else {
+                                    Toast.makeText(this@MainActivity, "No hay resultados", Toast.LENGTH_SHORT).show()
+                                }
+                                binding.etIngredientSearch.text = null
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                binding.etIngredientSearch.text = null
+                                Toast.makeText(this@MainActivity, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+                return@setOnKeyListener true
+            }
+            false
+        }
+        binding.btnIngredientSearch.setOnClickListener {
+            if (binding.etIngredientSearch.text.toString().isNotEmpty()) {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    if (isNetworkAvailable(this@MainActivity)) {
                         val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=${binding.etIngredientSearch.text}")
                         val ingredientDTO = responseService.body()
                         withContext(Dispatchers.Main) {
@@ -109,29 +158,13 @@ class MainActivity : AppCompatActivity() {
                             }
                             binding.etIngredientSearch.text = null
                         }
-                    }
-
-                }
-                return@setOnKeyListener true }
-            false
-        }
-        binding.btnIngredientSearch.setOnClickListener {
-            if (binding.etIngredientSearch.text.toString().isNotEmpty()) {
-                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.dlMain.windowToken, 0)
-                lifecycleScope.launch(Dispatchers.IO) {
-                    val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=${binding.etIngredientSearch.text}")
-                    val ingredientDTO = responseService.body()
-                    withContext(Dispatchers.Main) {
-                        if (ingredientDTO != null) {
-                            showFragment(IngredientFullViewFragment(), getString(R.string.ingredientfullviewfragment_tag), ingredientName = ingredientDTO.ingredient[0].strIngredient)
-                        } else {
-                            Toast.makeText(this@MainActivity, "No hay resultados", Toast.LENGTH_SHORT).show()
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            binding.etIngredientSearch.text = null
+                            Toast.makeText(this@MainActivity, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
                         }
-                        binding.etIngredientSearch.text = null
                     }
                 }
-
             }
         }
     }
@@ -190,7 +223,11 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.btnResetFavorites.setOnClickListener {
-            showSureDialog("restoreFavorites")
+            if (isNetworkAvailable(this)) {
+                showSureDialog("restoreFavorites")
+            } else {
+                showToastNoConnection()
+            }
             binding.dlMain.closeDrawers()
         }
 
@@ -297,22 +334,29 @@ class MainActivity : AppCompatActivity() {
         binding.expandableListView.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
             val childData = expandableListAdapter.getChild(groupPosition, childPosition) as Pair<Int, String>
 
-            when (childData.second) {
-                in arrayGlasses -> {
-                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeGlass = childData.second.replace(" ", "_"))
+            if (isNetworkAvailable(this)) {
+                when (childData.second) {
+                    in arrayGlasses -> {
+                        showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeGlass = childData.second.replace(" ", "_"))
+                    }
+                    in arrayCategories -> {
+                        showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeCategory = childData.second.replace(" ", "_"))
+                    }
+                    in arrayKinds -> {
+                        showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeKind = childData.second.replace(" ", "_"))
+                    }
+                    in arrayLetters -> {
+                        showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), letter = childData.second.lowercase())
+                    }
+                    in arrayMyAccount[0] -> {
+                        showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), cocktailsSaved = true)
+                    }
+                    in arrayMyAccount[1] -> {
+                        showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), cocktailsSaved = false)
+                    }
                 }
-                in arrayCategories -> {
-                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeCategory = childData.second.replace(" ", "_"))
-                }
-                in arrayKinds -> {
-                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), typeKind = childData.second.replace(" ", "_"))
-                }
-                in arrayLetters -> {
-                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), letter = childData.second.lowercase())
-                }
-                in arrayMyAccount -> {
-                    showFragment(CocktailsListedFragment(), getString(R.string.cocktailslistedfragment_tag), cocktailsSaved = true)
-                }
+            } else {
+                showToastNoConnection()
             }
             for (i in 0 until expandableListAdapter.groupCount) {
                 binding.expandableListView.collapseGroup(i)
@@ -404,6 +448,7 @@ class MainActivity : AppCompatActivity() {
     private fun allVisible() {
         setupFavoriteCocktails()
         binding.containerFragment.visibility = View.GONE
+        binding.tvKindOrGlassOrCategory.visibility = View.GONE
         binding.ivBackground.visibility = View.VISIBLE
         binding.cvSearch.visibility = View.VISIBLE
         binding.cvIngredientSearch.visibility = View.VISIBLE
@@ -419,6 +464,12 @@ class MainActivity : AppCompatActivity() {
         binding.tvPopDrinksTitle.visibility = View.GONE
         binding.tlPopCocktails.visibility = View.GONE
         binding.btnRandomCocktail.visibility = View.GONE
+        binding.tvKindOrGlassOrCategory.visibility = View.GONE
+    }
+
+    private fun showToastNoConnection() {
+        Toast.makeText(this, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+        if (binding.dlMain.isDrawerOpen(GravityCompat.START)) { binding.dlMain.closeDrawer(GravityCompat.START) }
     }
 
     override fun onDestroy() {

@@ -20,6 +20,8 @@ import com.example.username.cocktailsdb.adapters.CocktailsMinimalViewAdapter
 import com.example.username.cocktailsdb.databinding.CustomAlertDialogIngredientDescriptionBinding
 import com.example.username.cocktailsdb.databinding.FragmentIngredientFullViewBinding
 import com.example.username.cocktailsdb.objects.DarkMode.isDarkModeEnabled
+import com.example.username.cocktailsdb.objects.NetworkManager
+import com.example.username.cocktailsdb.objects.NetworkManager.isNetworkAvailable
 import com.example.username.cocktailsdb.objects.ShowFragmentFromFragment.showFragment
 import com.example.username.cocktailsdb.retrofit.RetrofitCocktail
 import com.example.username.cocktailsdb.translator.TranslateService
@@ -45,83 +47,93 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
     private fun setupUI(idContainer: Int?, ingredientName: String?) {
         if (idContainer != null && ingredientName != null) {
             lifecycleScope.launch(Dispatchers.IO) {
-                val translator = TranslateService
-                val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=$ingredientName")
-                val ingredientDTO = responseService.body()
-                val responseService2 = RetrofitCocktail.APICOCKTAILS.getCocktailsSimpleList("filter.php?i=$ingredientName")
-                val cocktails = responseService2.body()
-                withContext(Dispatchers.Main) {
-                    if (responseService.isSuccessful) {
-                        if (!isDarkModeEnabled(requireContext())) {
-                            binding.tvTitleIngredient.setTextColor(resources.getColor(R.color.white, null))
-                            binding.tvDescription.setTextColor(resources.getColor(R.color.white, null))
-                        }
-                        binding.pbIngredient.visibility = View.GONE
-                        binding.rlMain.visibility = View.VISIBLE
-                        binding.tvTitleIngredient.text = ingredientDTO?.ingredient?.get(0)?.strIngredient
-                        Glide.with(requireContext())
-                            .load("https://www.thecocktaildb.com/images/ingredients/$ingredientName.png")
-                            .listener(object : RequestListener<Drawable> {
-                                override fun onLoadFailed(
-                                    e: GlideException?,
-                                    model: Any?,
-                                    target: com.bumptech.glide.request.target.Target<Drawable>?,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    binding.pbIvIngredient.visibility = View.GONE
-                                    binding.ivIngredient.visibility = View.VISIBLE
-                                    Toast.makeText(requireContext(), "Error al cargar la imagen", Toast.LENGTH_SHORT).show()
-                                    return false
-                                }
+                try {
+                    val translator = TranslateService
+                    val responseService = RetrofitCocktail.APICOCKTAILS.getIngredient("search.php?i=$ingredientName")
+                    val ingredientDTO = responseService.body()
+                    val responseService2 = RetrofitCocktail.APICOCKTAILS.getCocktailsSimpleList("filter.php?i=$ingredientName")
+                    val cocktails = responseService2.body()
+                    withContext(Dispatchers.Main) {
+                        if (responseService.isSuccessful) {
+                            if (!isDarkModeEnabled(requireContext())) {
+                                binding.tvTitleIngredient.setTextColor(resources.getColor(R.color.white, null))
+                                binding.tvDescription.setTextColor(resources.getColor(R.color.white, null))
+                            }
+                            binding.pbIngredient.visibility = View.GONE
+                            binding.rlMain.visibility = View.VISIBLE
+                            binding.tvTitleIngredient.text = ingredientDTO?.ingredient?.get(0)?.strIngredient
+                            Glide.with(requireContext())
+                                .load("https://www.thecocktaildb.com/images/ingredients/$ingredientName.png")
+                                .listener(object : RequestListener<Drawable> {
+                                    override fun onLoadFailed(
+                                        e: GlideException?,
+                                        model: Any?,
+                                        target: com.bumptech.glide.request.target.Target<Drawable>?,
+                                        isFirstResource: Boolean
+                                    ): Boolean {
+                                        binding.pbIvIngredient.visibility = View.GONE
+                                        binding.ivIngredient.visibility = View.VISIBLE
+                                        Toast.makeText(requireContext(), "Error al cargar la imagen", Toast.LENGTH_SHORT).show()
+                                        return false
+                                    }
 
-                                override fun onResourceReady(
-                                    resource: Drawable?,
-                                    model: Any?,
-                                    target: com.bumptech.glide.request.target.Target<Drawable>?,
-                                    dataSource: DataSource?,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    // La imagen se ha cargado correctamente
-                                    binding.pbIvIngredient.visibility = View.GONE
-                                    binding.ivIngredient.visibility = View.VISIBLE
-                                    return false
+                                    override fun onResourceReady(
+                                        resource: Drawable?,
+                                        model: Any?,
+                                        target: com.bumptech.glide.request.target.Target<Drawable>?,
+                                        dataSource: DataSource?,
+                                        isFirstResource: Boolean
+                                    ): Boolean {
+                                        // La imagen se ha cargado correctamente
+                                        binding.pbIvIngredient.visibility = View.GONE
+                                        binding.ivIngredient.visibility = View.VISIBLE
+                                        return false
+                                    }
+                                })
+                                .into(binding.ivIngredient)
+                            binding.tvDescription.text = ingredientDTO?.ingredient?.get(0)?.strDescription
+                            ingredientDTO?.ingredient?.get(0)?.strDescription?.let {
+                                translator.englishSpanishTranslator.translate(it)
+                                    .addOnSuccessListener { itES ->
+                                        binding.tvDescription.text = itES
+                                        descTranslated = itES
+                                    }
+                            }
+                            binding.tvDescription.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                                override fun onGlobalLayout() {
+                                    if (binding.tvDescription.lineCount > 4) {
+                                        binding.tvSeeMore.visibility = View.VISIBLE
+                                    }
+                                    binding.tvDescription.viewTreeObserver.removeOnGlobalLayoutListener(this)
                                 }
                             })
-                            .into(binding.ivIngredient)
-                        binding.tvDescription.text = ingredientDTO?.ingredient?.get(0)?.strDescription
-                        ingredientDTO?.ingredient?.get(0)?.strDescription?.let {
-                            translator.englishSpanishTranslator.translate(it)
-                                .addOnSuccessListener { itES ->
-                                    binding.tvDescription.text = itES
-                                    descTranslated = itES
-                                }
-                        }
-                        binding.tvDescription.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                            override fun onGlobalLayout() {
-                                if (binding.tvDescription.lineCount > 4) {
-                                    binding.tvSeeMore.visibility = View.VISIBLE
-                                }
-                                binding.tvDescription.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            if (binding.tvDescription.lineCount > 4) { binding.tvSeeMore.visibility = View.VISIBLE }
+                            binding.tvSeeMore.setOnClickListener { showDialogFullDescription(descTranslated) }
+                            if (responseService2.isSuccessful) {
+                                val listCocktails = cocktails?.cocktails
+                                val adapter = CocktailsMinimalViewAdapter(listCocktails!!, requireContext(), false, {
+                                    if (isNetworkAvailable(requireActivity())) {
+                                        showFragment(
+                                            idContainer,
+                                            requireActivity(),
+                                            CocktailFullViewFragment(),
+                                            getString(R.string.cocktailfullviewfragment_tag),
+                                            idDrink = it.idDrink
+                                        )
+                                    } else {
+                                        Toast.makeText(requireContext(), "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+                                    }
+                                }, {})
+                                binding.rvCocktailsByIngredient.adapter = adapter
+                            } else {
+                                Toast.makeText(requireContext(), "Error en la base de datos", Toast.LENGTH_SHORT).show()
                             }
-                        })
-                        if (binding.tvDescription.lineCount > 4) { binding.tvSeeMore.visibility = View.VISIBLE }
-                        binding.tvSeeMore.setOnClickListener { showDialogFullDescription(descTranslated) }
-                        if (responseService2.isSuccessful) {
-                            val listCocktails = cocktails?.cocktails
-                            val adapter = CocktailsMinimalViewAdapter(listCocktails!!, requireContext(), false, {
-                                showFragment(
-                                    idContainer,
-                                    requireActivity(),
-                                    CocktailFullViewFragment(),
-                                    getString(R.string.cocktailfullviewfragment_tag),
-                                    idDrink = it.idDrink
-                                )
-                            }, {})
-                            binding.rvCocktailsByIngredient.adapter = adapter
                         } else {
-                            Toast.makeText(requireContext(), "Error en la base de datos", Toast.LENGTH_SHORT).show()
+                            handleError("Error en la obtención de datos del ingrediente")
                         }
                     }
+                } catch (e: Exception) {
+                    handleError("Error en la consulta a la API: ${e.message}")
                 }
             }
         }
@@ -135,6 +147,13 @@ class IngredientFullViewFragment : Fragment(R.layout.fragment_ingredient_full_vi
             .create()
         binding.tvDescFull.text = description
         alertDialog.show()
+    }
+
+    private suspend fun handleError(errorMessage: String) {
+        withContext(Dispatchers.Main) {
+            Log.e("IngredientFullView", errorMessage)
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

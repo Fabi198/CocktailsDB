@@ -36,7 +36,7 @@ object ArraysNames {
         "Cocoa",
         "Shot",
         "Coffee / Tea",
-        "Homemade Liquieur",
+        "Homemade Liqueur",
         "Punch / Party Drink",
         "Beer",
         "Soft Drink"
@@ -52,6 +52,7 @@ object ArraysNames {
 
 
     val arrayMyAccount = arrayOf(
-        "Mis Cocteles"
+        "Mis Cocteles",
+        "Historial"
     )
 }

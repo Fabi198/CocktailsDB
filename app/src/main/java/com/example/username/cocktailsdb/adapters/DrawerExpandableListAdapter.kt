@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
-import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.username.cocktailsdb.R
 import com.example.username.cocktailsdb.databinding.DrawerListGroupBinding
@@ -23,7 +22,7 @@ class DrawerExpandableListAdapter(private val activity: Activity, private val co
             R.drawable.glass_highball to "Highball glass",
             R.drawable.glass_cocktail to "Cocktail glass",
             R.drawable.glass_old_fashioned to "Old-fashioned glass",
-            R.drawable.glass_whiskey to "Whiskey glass",
+            R.drawable.glass_whiskey to "Whiskey Glass",
             R.drawable.glass_collins to "Collins glass",
             R.drawable.glass_pousse_cafe to "Pousse cafe glass",
             R.drawable.glass_champagne_flute to "Champagne flute",
@@ -51,7 +50,7 @@ class DrawerExpandableListAdapter(private val activity: Activity, private val co
             0 to "Cocoa",
             0 to "Shot",
             0 to "Coffee / Tea",
-            0 to "Homemade Liquieur",
+            0 to "Homemade Liqueur",
             0 to "Punch / Party Drink",
             0 to "Beer",
             0 to "Soft Drink"),
@@ -89,7 +88,8 @@ class DrawerExpandableListAdapter(private val activity: Activity, private val co
         ),
         // Agrega más opciones adicionales según sea necesario
         "Mi Cuenta" to listOf(
-            0 to "Mis Cocteles"
+            0 to "Mis Cocteles",
+            0 to "Historial"
         )
     )
 

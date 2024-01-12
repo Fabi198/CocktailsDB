@@ -73,4 +73,7 @@
     <string name="elija_una_posici_n">Elija una posición</string>
     <string name="est_seguro">¿Está seguro?</string>
     <string name="random_tag">random</string>
+    <string name="ver_original">Ver original</string>
+    <string name="historial">Historial</string>
+    <string name="guardados">Guardados</string>
 </resources>

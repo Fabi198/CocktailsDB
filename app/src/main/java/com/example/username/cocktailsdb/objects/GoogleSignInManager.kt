@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.NonNull
 import com.example.username.cocktailsdb.MainActivity
 import com.example.username.cocktailsdb.R
 import com.example.username.cocktailsdb.objects.Preferences.saveGoogleUserData
@@ -16,11 +15,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 
 class GoogleSignInManager private constructor() {
@@ -113,12 +107,17 @@ class GoogleSignInManager private constructor() {
                         .addOnSuccessListener { documentSnapshot ->
                             if (!documentSnapshot.exists()) {
                                 // El documento "users" para este usuario no existe, así que lo creamos
-                                usersReference.set(mapOf("cocktailIDs" to emptyMap<String, Boolean>()))
+                                val initialData = mapOf(
+                                    "cocktailIDs" to emptyMap<String, Boolean>(),
+                                    "recentCocktails" to emptyList<String>()
+                                )
+
+                                usersReference.set(initialData)
                                     .addOnSuccessListener {
-                                        Log.i("Portet", "Campo 'cocktailIDs' creado exitosamente")
+                                        Log.i("Portet", "Campos 'cocktailIDs' y 'recentCocktails' creados exitosamente")
                                     }
                                     .addOnFailureListener { e ->
-                                        Log.e("Firebase", "Error al crear el campo 'cocktailIDs': $e")
+                                        Log.e("Firebase", "Error al crear los campos 'cocktailIDs' y 'recentCocktails': $e")
                                     }
                             }
                         }
