@@ -14,6 +14,6 @@ Además de muchas otras cosas que están en desarrollo y se irán agregando conf
 
 Link de descarga del APK:
 
-https://drive.google.com/file/d/1oMEXRpUcnj6TqpgjDxPLgZ_XeTVezz30/view?usp=sharing
+https://drive.google.com/file/d/1GahF4eq5ct-Qx8sm_IUGbjxHy8rNLGNw/view?usp=sharing
 
 ¡Salud! 🥂✨
