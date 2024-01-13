@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         setupDrawerContent()
         setupSearchers()
 
+
         if (isNetworkAvailable(this)) { setupFavoriteCocktails() } else { showToastNoConnection() }
 
         binding.btnRandomCocktail.setOnClickListener {

@@ -275,4 +275,5 @@ class CocktailsListedFragment : Fragment(R.layout.fragment_cocktails_listed) {
         }
     }
 
+
 }

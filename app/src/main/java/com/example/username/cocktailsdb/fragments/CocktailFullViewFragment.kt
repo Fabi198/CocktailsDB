@@ -460,4 +460,5 @@ class CocktailFullViewFragment : Fragment(R.layout.fragment_cocktail_full_view) 
             }
         }
     }
+
 }
